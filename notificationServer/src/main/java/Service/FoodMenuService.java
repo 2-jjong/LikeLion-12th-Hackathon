@@ -14,4 +14,6 @@ public interface FoodMenuService {
     public FoodMenuDTO updateFoodMenu(FoodMenuDTO foodMenuDTO);
 
     public void deleteFoodMenu(Long id);
+
+    public void sendFoodMenuNotification(FoodMenuDTO foodMenuDTO);
 }

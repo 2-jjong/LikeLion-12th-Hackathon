@@ -17,4 +17,6 @@ public class NotificationWebSocketHandler extends TextWebSocketHandler {
         // Echo the received message back to the client
         session.sendMessage(new TextMessage("Echo: " + payload));
     }
+
+
 }

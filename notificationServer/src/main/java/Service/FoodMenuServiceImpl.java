@@ -2,9 +2,11 @@ package Service;
 
 import DAO.FoodMenuDAO;
 import DTO.FoodMenuDTO;
+import WebSocket.Handler.NotificationWebSocketHandler;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
 
@@ -51,7 +53,17 @@ public class FoodMenuServiceImpl implements FoodMenuService {
         FoodMenuDTO foodMenuDTO = restTemplate.getForObject(url, FoodMenuDTO.class);
     }
     //알림 보내기
-    public void sendFoodMenuNotifications() {
-        // 식단 알림 보내기 구현해야됨
+    @Override
+    public void sendFoodMenuNotification(FoodMenuDTO foodMenuDTO) {
+        String message = foodMenuDTO.getNotificationContent();
+        List<WebSocketSession> sessions = NotificationWebSocketHandler.getSessionsByUserId(foodMenuDTO.getUserId());
+
+        for (WebSocketSession session : sessions) {
+            try {
+                session.sendMessage(new TextMessage(message));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
