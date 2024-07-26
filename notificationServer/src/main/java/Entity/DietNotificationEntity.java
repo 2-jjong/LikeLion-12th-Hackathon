@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @ToString
-public class FoodMenuEntity {
+public class DietNotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,7 +21,7 @@ public class FoodMenuEntity {
     private LocalDateTime notificationTime;
 
     @Builder
-    public FoodMenuEntity(Long userId, String notificationContent, LocalDateTime notificationTime){
+    public DietNotificationEntity(Long userId, String notificationContent, LocalDateTime notificationTime){
         this.userId = userId;
         this.notificationContent = notificationContent;
         this.notificationTime = notificationTime;
