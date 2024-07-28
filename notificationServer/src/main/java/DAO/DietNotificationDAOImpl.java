@@ -18,7 +18,7 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
         this.dietNotificationRepository = dietNotificationRepository;
     }
     //Entity To DTO
-    private DietNotificationDTO foodMenuEntityToDTO(DietNotificationEntity dietNotificationEntity) {
+    private DietNotificationDTO DietNotificationEntityToDTO(DietNotificationEntity dietNotificationEntity) {
         return DietNotificationDTO.builder()
                 .id(dietNotificationEntity.getId())
                 .userId(dietNotificationEntity.getUserId())
@@ -44,14 +44,14 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
         if (dietNotificationEntity == null){
             return null;
         }
-        return foodMenuEntityToDTO(dietNotificationEntity);
+        return DietNotificationEntityToDTO(dietNotificationEntity);
     }
 
     @Override
     public List<DietNotificationDTO> findByUserId(Long userId) {
-        List<DietNotificationEntity> foodMenuEntities = dietNotificationRepository.findByUserId(userId);
-        return foodMenuEntities.stream()
-                .map(this::foodMenuEntityToDTO)
+        List<DietNotificationEntity> DietNotificationEntities = dietNotificationRepository.findByUserId(userId);
+        return DietNotificationEntities.stream()
+                .map(this::DietNotificationEntityToDTO)
                 .collect(Collectors.toList());
     }
 

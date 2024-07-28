@@ -21,33 +21,33 @@ public class DietNotificationController {
     }
 
     @PostMapping
-    public ResponseEntity<DietNotificationDTO> createFoodMenu(@RequestBody DietNotificationDTO dietNotificationDTO) {
-        DietNotificationDTO createdFoodMenu = DietNotificationService.createFoodMenu(dietNotificationDTO);
-        return ResponseEntity.ok(createdFoodMenu);
+    public ResponseEntity<DietNotificationDTO> createDietNotification(@RequestBody DietNotificationDTO dietNotificationDTO) {
+        DietNotificationDTO createdDietNotification = DietNotificationService.createDietNotification(dietNotificationDTO);
+        return ResponseEntity.ok(createdDietNotification);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DietNotificationDTO> getFoodMenuById(@PathVariable Long id) {
-        DietNotificationDTO dietNotificationDTO = DietNotificationService.getFoodMenuById(id);
+    public ResponseEntity<DietNotificationDTO> getDietNotificationById(@PathVariable Long id) {
+        DietNotificationDTO dietNotificationDTO = DietNotificationService.getDietNotificationById(id);
         return ResponseEntity.ok(dietNotificationDTO);
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<DietNotificationDTO>> getFoodMenusByUserId(@PathVariable Long userId) {
-        List<DietNotificationDTO> dietNotificationDTOS = DietNotificationService.getFoodMenusByUserId(userId);
+    public ResponseEntity<List<DietNotificationDTO>> getDietNotificationsByUserId(@PathVariable Long userId) {
+        List<DietNotificationDTO> dietNotificationDTOS = DietNotificationService.getDietNotificationsByUserId(userId);
         return ResponseEntity.ok(dietNotificationDTOS);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DietNotificationDTO> updateFoodMenu(@PathVariable Long id, @RequestBody DietNotificationDTO dietNotificationDTO) {
+    public ResponseEntity<DietNotificationDTO> updateDietNotification(@PathVariable Long id, @RequestBody DietNotificationDTO dietNotificationDTO) {
         dietNotificationDTO.setId(id);
-        DietNotificationDTO updatedFoodMenu = DietNotificationService.updateFoodMenu(dietNotificationDTO);
-        return ResponseEntity.ok(updatedFoodMenu);
+        DietNotificationDTO updatedDietNotification = DietNotificationService.updateDietNotification(dietNotificationDTO);
+        return ResponseEntity.ok(updatedDietNotification);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFoodMenu(@PathVariable Long id) {
-        DietNotificationService.deleteFoodMenu(id);
+    public ResponseEntity<Void> deleteDietNotification(@PathVariable Long id) {
+        DietNotificationService.deleteDietNotification(id);
         return ResponseEntity.noContent().build();
     }
 }

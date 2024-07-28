@@ -1,12 +1,12 @@
 package Service;
 
 import DTO.DietNotificationDTO;
+import DTO.ExternalDietNotificationDTO;
 import WebSocket.Handler.NotificationWebSocketHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
-
 import java.io.IOException;
 import java.util.List;
 
@@ -19,13 +19,15 @@ public class NotificationSenderImpl implements NotificationSender{
         this.restTemplate = restTemplate;
     }
 
-    public DietNotificationDTO fetchFoodMenuNotification(String url) {
-        return restTemplate.getForObject(url, DietNotificationDTO.class);
+    @Override
+    public ExternalDietNotificationDTO fetchDietNotificationNotification(String url) {
+        return restTemplate.getForObject(url, ExternalDietNotificationDTO.class);
     }
 
-    public void sendFoodMenuNotification(DietNotificationDTO dietNotificationDTO) {
-        String message = dietNotificationDTO.getNotificationContent();
-        List<WebSocketSession> sessions = NotificationWebSocketHandler.getSessionsByUserId(dietNotificationDTO.getUserId());
+    @Override
+    public void sendDietNotificationNotification(ExternalDietNotificationDTO externalDTO) {
+        String message = externalDTO.getNotificationContent();
+        List<WebSocketSession> sessions = NotificationWebSocketHandler.getSessionsByUserId(externalDTO.getUserId());
 
         for (WebSocketSession session : sessions) {
             try {
