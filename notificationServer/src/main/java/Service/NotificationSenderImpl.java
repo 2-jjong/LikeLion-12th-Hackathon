@@ -1,6 +1,5 @@
 package Service;
 
-import DTO.DietNotificationDTO;
 import DTO.ExternalDietNotificationDTO;
 import WebSocket.Handler.NotificationWebSocketHandler;
 import org.springframework.stereotype.Component;

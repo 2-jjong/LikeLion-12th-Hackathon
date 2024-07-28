@@ -2,8 +2,6 @@ package Service;
 
 import DAO.DietNotificationDAO;
 import DTO.DietNotificationDTO;
-import DTO.ExternalDietNotificationDTO;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,11 +10,9 @@ import java.util.List;
 public class DietNotificationServiceImpl implements DietNotificationService {
 
     private final DietNotificationDAO dietNotificationDAO;
-    private final NotificationSender notificationSender;
 
-    public DietNotificationServiceImpl(DietNotificationDAO dietNotificationDAO, NotificationSender notificationSender) {
+    public DietNotificationServiceImpl(DietNotificationDAO dietNotificationDAO) {
         this.dietNotificationDAO = dietNotificationDAO;
-        this.notificationSender = notificationSender;
     }
 
     @Override

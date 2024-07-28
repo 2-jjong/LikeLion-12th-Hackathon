@@ -2,7 +2,6 @@ package Scheduler;
 
 import DTO.DietNotificationDTO;
 import DTO.ExternalDietNotificationDTO;
-import Service.DietNotificationService;
 import Service.NotificationSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,7 +11,7 @@ public class NotificationScheduler {
 
     private final NotificationSender notificationSender;
 
-    public NotificationScheduler(NotificationSender notificationSender, DietNotificationService dietNotificationService) {
+    public NotificationScheduler(NotificationSender notificationSender) {
         this.notificationSender = notificationSender;
     }
 
