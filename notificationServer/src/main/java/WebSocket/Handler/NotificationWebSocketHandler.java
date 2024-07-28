@@ -27,6 +27,4 @@ public class NotificationWebSocketHandler extends TextWebSocketHandler {
     public static List<WebSocketSession> getSessionsByUserId(Long userId) {
         return userSessions.getOrDefault(userId, new ArrayList<>());
     }
-
-
 }

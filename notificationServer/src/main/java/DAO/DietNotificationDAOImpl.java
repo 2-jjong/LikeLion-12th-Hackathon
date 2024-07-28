@@ -4,6 +4,7 @@ import DTO.DietNotificationDTO;
 import Entity.DietNotificationEntity;
 import Repository.DietNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -12,10 +13,13 @@ import java.util.stream.Collectors;
 @Repository
 public class DietNotificationDAOImpl implements DietNotificationDAO {
     private final DietNotificationRepository dietNotificationRepository;
+    private final JdbcTemplate jdbcTemplate;
+
 
     @Autowired
-    public DietNotificationDAOImpl(DietNotificationRepository dietNotificationRepository){
+    public DietNotificationDAOImpl(DietNotificationRepository dietNotificationRepository, JdbcTemplate jdbcTemplate){
         this.dietNotificationRepository = dietNotificationRepository;
+        this.jdbcTemplate = jdbcTemplate;
     }
     //Entity To DTO
     private DietNotificationDTO DietNotificationEntityToDTO(DietNotificationEntity dietNotificationEntity) {
@@ -70,4 +74,18 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
     public void delete(Long id) {
         dietNotificationRepository.deleteById(id);
     }
+/*
+    @Override
+    public List<DietNotificationDTO> findByUserId(Long userId) {
+        String sql = "SELECT * FROM diet_notifications WHERE user_id = ?";
+        return jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) ->
+                new DietNotificationDTO(
+                        rs.getLong("id"),
+                        rs.getLong("user_id"),
+                        rs.getString("notification_content")
+                )
+        );
+
+    }
+*/
 }

@@ -10,4 +10,5 @@ public interface DietNotificationDAO {
     public List<DietNotificationDTO> findByUserId(Long userId);
     public DietNotificationDTO update(DietNotificationDTO dietNotificationDTO);
     public void delete(Long id);
+    //List<DietNotificationDTO> findByUserId(Long userId);
 }
