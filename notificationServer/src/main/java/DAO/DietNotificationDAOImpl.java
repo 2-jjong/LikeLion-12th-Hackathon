@@ -13,13 +13,10 @@ import java.util.stream.Collectors;
 @Repository
 public class DietNotificationDAOImpl implements DietNotificationDAO {
     private final DietNotificationRepository dietNotificationRepository;
-    private final JdbcTemplate jdbcTemplate;
-
 
     @Autowired
     public DietNotificationDAOImpl(DietNotificationRepository dietNotificationRepository, JdbcTemplate jdbcTemplate){
         this.dietNotificationRepository = dietNotificationRepository;
-        this.jdbcTemplate = jdbcTemplate;
     }
     //Entity To DTO
     private DietNotificationDTO DietNotificationEntityToDTO(DietNotificationEntity dietNotificationEntity) {
