@@ -1,10 +1,10 @@
-package Entity;
+package com.example.notificationserver.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "Notification")
+@Table(name = "diet_notification")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -1,8 +1,9 @@
-package Scheduler;
+package com.example.notificationserver.Scheduler;
 
-import DTO.DietNotificationDTO;
-import DTO.ExternalDietNotificationDTO;
-import Service.NotificationSender;
+import com.example.notificationserver.DTO.DietNotificationDTO;
+import com.example.notificationserver.DTO.ExternalDietNotificationDTO;
+import com.example.notificationserver.Service.NotificationSender;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -11,13 +12,14 @@ public class NotificationScheduler {
 
     private final NotificationSender notificationSender;
 
+    @Autowired
     public NotificationScheduler(NotificationSender notificationSender) {
         this.notificationSender = notificationSender;
     }
 
     @Scheduled(cron = "0 0 7 * * *")
     public void fetchAndStoreDietNotificationNotification() {
-        String url = "http://example.com/api/diets"; // 실제 서버 URL
+        String url = "http://localhost:8080/notification/diet"; // 실제 서버 URL
         ExternalDietNotificationDTO externalDTO = notificationSender.fetchDietNotificationNotification(url);
 
         // 필요한 정보만 추출

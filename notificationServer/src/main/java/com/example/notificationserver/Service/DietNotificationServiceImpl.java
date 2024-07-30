@@ -1,7 +1,7 @@
-package Service;
+package com.example.notificationserver.Service;
 
-import DAO.DietNotificationDAO;
-import DTO.DietNotificationDTO;
+import com.example.notificationserver.DAO.DietNotificationDAO;
+import com.example.notificationserver.DTO.DietNotificationDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

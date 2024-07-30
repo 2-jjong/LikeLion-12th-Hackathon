@@ -1,7 +1,7 @@
-package Controller;
+package com.example.notificationserver.Controller;
 
-import DTO.DietNotificationDTO;
-import Service.DietNotificationService;
+import com.example.notificationserver.DTO.DietNotificationDTO;
+import com.example.notificationserver.Service.DietNotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/notification/food-menu")
+@RequestMapping("/notification/diet")
 public class DietNotificationController {
     private final DietNotificationService DietNotificationService;
 
@@ -20,12 +20,13 @@ public class DietNotificationController {
         this.DietNotificationService = dietNotificationService;
     }
 
-    @PostMapping
+    @PostMapping(value = "/create")
     public ResponseEntity<DietNotificationDTO> createDietNotification(@RequestBody DietNotificationDTO dietNotificationDTO) {
         DietNotificationDTO createdDietNotification = DietNotificationService.createDietNotification(dietNotificationDTO);
         return ResponseEntity.ok(createdDietNotification);
     }
 
+    @CrossOrigin(origins = "http://192.168.61.42:3000")
     @GetMapping("/{id}")
     public ResponseEntity<DietNotificationDTO> getDietNotificationById(@PathVariable Long id) {
         DietNotificationDTO dietNotificationDTO = DietNotificationService.getDietNotificationById(id);
@@ -50,4 +51,6 @@ public class DietNotificationController {
         DietNotificationService.deleteDietNotification(id);
         return ResponseEntity.noContent().build();
     }
+
+    //@GetMapping("/user")
 }

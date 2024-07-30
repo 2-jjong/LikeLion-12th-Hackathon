@@ -1,6 +1,6 @@
-package Service;
+package com.example.notificationserver.Service;
 
-import DTO.ExternalDietNotificationDTO;
+import com.example.notificationserver.DTO.ExternalDietNotificationDTO;
 
 public interface NotificationSender {
 

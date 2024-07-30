@@ -1,8 +1,8 @@
-package DAO;
+package com.example.notificationserver.DAO;
 
-import DTO.DietNotificationDTO;
-import Entity.DietNotificationEntity;
-import Repository.DietNotificationRepository;
+import com.example.notificationserver.DTO.DietNotificationDTO;
+import com.example.notificationserver.Entity.DietNotificationEntity;
+import com.example.notificationserver.Repository.DietNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;

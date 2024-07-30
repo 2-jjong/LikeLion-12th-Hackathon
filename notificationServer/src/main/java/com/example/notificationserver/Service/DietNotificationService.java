@@ -1,6 +1,6 @@
-package Service;
+package com.example.notificationserver.Service;
 
-import DTO.DietNotificationDTO;
+import com.example.notificationserver.DTO.DietNotificationDTO;
 
 import java.util.List;
 

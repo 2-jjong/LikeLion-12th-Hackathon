@@ -1,4 +1,4 @@
-package DTO;
+package com.example.notificationserver.DTO;
 import lombok.*;
 
 import java.time.LocalDateTime;

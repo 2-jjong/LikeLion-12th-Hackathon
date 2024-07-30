@@ -1,6 +1,6 @@
-package DAO;
+package com.example.notificationserver.DAO;
 
-import DTO.DietNotificationDTO;
+import com.example.notificationserver.DTO.DietNotificationDTO;
 
 import java.util.List;
 

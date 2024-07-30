@@ -1,4 +1,4 @@
-package WebSocket.Handler;
+package com.example.notificationserver.WebSocket.Handler;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,18 +13,34 @@ public class NotificationWebSocketHandler extends TextWebSocketHandler {
 
     private static final ConcurrentHashMap<Long, List<WebSocketSession>> userSessions = new ConcurrentHashMap<>();
 
-    //밑에꺼 자동완성이라 뭐 어케써야하는거냐? 하나도 모르겠네
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws IOException {
         String payload = message.getPayload();
-        // Handle the received message
         System.out.println("Received: " + payload);
 
         // Echo the received message back to the client
-        session.sendMessage(new TextMessage("Echo: " + payload));
+        try {
+            session.sendMessage(new TextMessage("Echo: " + payload));
+        } catch (IOException e) {
+            System.err.println("Error sending message: " + e.getMessage());
+        }
     }
-    //먼 개소리징
+
     public static List<WebSocketSession> getSessionsByUserId(Long userId) {
         return userSessions.getOrDefault(userId, new ArrayList<>());
+    }
+
+    public static void addSession(Long userId, WebSocketSession session) {
+        userSessions.computeIfAbsent(userId, k -> new ArrayList<>()).add(session);
+    }
+
+    public static void removeSession(Long userId, WebSocketSession session) {
+        List<WebSocketSession> sessions = userSessions.get(userId);
+        if (sessions != null) {
+            sessions.remove(session);
+            if (sessions.isEmpty()) {
+                userSessions.remove(userId);
+            }
+        }
     }
 }

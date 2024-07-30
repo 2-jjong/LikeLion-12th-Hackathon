@@ -1,6 +1,6 @@
-package Repository;
+package com.example.notificationserver.Repository;
 
-import Entity.DietNotificationEntity;
+import com.example.notificationserver.Entity.DietNotificationEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
