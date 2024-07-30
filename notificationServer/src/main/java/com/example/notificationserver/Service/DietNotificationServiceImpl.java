@@ -2,17 +2,24 @@ package com.example.notificationserver.Service;
 
 import com.example.notificationserver.DAO.DietNotificationDAO;
 import com.example.notificationserver.DTO.DietNotificationDTO;
+import com.example.notificationserver.DTO.NotificationTypeDTO;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
 public class DietNotificationServiceImpl implements DietNotificationService {
 
     private final DietNotificationDAO dietNotificationDAO;
+    private final NotificationService notificationService;
+    private final NotificationTypeService notificationTypeService;
 
-    public DietNotificationServiceImpl(DietNotificationDAO dietNotificationDAO) {
+    public DietNotificationServiceImpl(DietNotificationDAO dietNotificationDAO, NotificationService notificationService, NotificationTypeService notificationTypeService) {
         this.dietNotificationDAO = dietNotificationDAO;
+        this.notificationService = notificationService;
+        this.notificationTypeService = notificationTypeService;
     }
 
     @Override
@@ -40,4 +47,21 @@ public class DietNotificationServiceImpl implements DietNotificationService {
         dietNotificationDAO.delete(id);
     }
 
+    // 매일 오전 7시에 자동으로 실행되는 메서드
+    @Scheduled(cron = "20 * * * * ?")
+    public void scheduleDietNotification() {
+        // NotificationType에서 ID 1번과 4번의 내용을 가져옴
+        NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(1L);
+        NotificationTypeDTO notificationType4 = notificationTypeService.getNotificationTypeById(2L);
+        LocalDateTime currentDate = LocalDateTime.now();
+
+        // 내용을 결합
+        String combinedContent = notificationType1.getNotificationContent() + " " + currentDate + " " + notificationType4.getNotificationContent();
+
+        DietNotificationDTO notification = new DietNotificationDTO();
+        notification.setEmail("test@naver.com");
+        notification.setNotificationContent(combinedContent);
+        createDietNotification(notification);
+        notificationService.sendNotification(notification);
+    }
 }

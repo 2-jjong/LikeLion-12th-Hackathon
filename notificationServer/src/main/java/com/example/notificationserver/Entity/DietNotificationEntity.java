@@ -16,13 +16,16 @@ public class DietNotificationEntity {
     @Column
     private Long userId;
     @Column
+    private String email;
+    @Column
     private String notificationContent;
     @Column
     private LocalDateTime notificationTime;
 
     @Builder
-    public DietNotificationEntity(Long userId, String notificationContent, LocalDateTime notificationTime){
+    public DietNotificationEntity(Long userId, String email, String notificationContent, LocalDateTime notificationTime){
         this.userId = userId;
+        this.email = email;
         this.notificationContent = notificationContent;
         this.notificationTime = notificationTime;
     }

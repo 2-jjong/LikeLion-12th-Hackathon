@@ -19,7 +19,7 @@ public class NotificationScheduler {
 
     @Scheduled(cron = "0 0 7 * * *")
     public void fetchAndStoreDietNotificationNotification() {
-        String url = "http://localhost:8080/notification/diet"; // 실제 서버 URL
+        String url = "http://127.0.0.1:3000/notification/diet"; // 실제 서버 URL
         ExternalDietNotificationDTO externalDTO = notificationSender.fetchDietNotificationNotification(url);
 
         // 필요한 정보만 추출
