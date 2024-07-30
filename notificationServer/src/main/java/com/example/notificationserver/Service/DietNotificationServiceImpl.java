@@ -51,18 +51,18 @@ public class DietNotificationServiceImpl implements DietNotificationService {
     //"0 0 7, 12, 23 * * ?" 7시 12시 23시
     //"0/20 * * * * ?" 20초마다 실행
     @Override
-    @Scheduled(cron = "0/1 * * * * ?")
+    @Scheduled(cron = "20 * * * * ?")
     public void scheduleDietNotification() {
         // NotificationType 에서 ID 1번과 4번의 내용을 가져옴
         NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(1L);
-        NotificationTypeDTO notificationType4 = notificationTypeService.getNotificationTypeById(2L);
+        NotificationTypeDTO notificationType2 = notificationTypeService.getNotificationTypeById(2L);
         LocalDateTime currentDate = LocalDateTime.now();
 
         // 내용을 결합
         String combinedContent =
                 notificationType1.getNotificationContent()
                 + " " + currentDate + " "
-                + notificationType4.getNotificationContent();
+                + notificationType2.getNotificationContent();
 
         DietNotificationDTO notification = new DietNotificationDTO();
         notification.setEmail("test@naver.com");
