@@ -6,7 +6,6 @@ import com.example.notificationserver.DTO.NotificationTypeDTO;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -49,7 +48,10 @@ public class DietNotificationServiceImpl implements DietNotificationService {
     }
 
     // 초 분 시 일 월 년에 자동으로 실행되는 메서드
-    @Scheduled(cron = "20 * * * * ?")
+    //"0 0 7, 12, 23 * * ?" 7시 12시 23시
+    //"0/20 * * * * ?" 20초마다 실행
+    @Override
+    @Scheduled(cron = "0/1 * * * * ?")
     public void scheduleDietNotification() {
         // NotificationType 에서 ID 1번과 4번의 내용을 가져옴
         NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(1L);
