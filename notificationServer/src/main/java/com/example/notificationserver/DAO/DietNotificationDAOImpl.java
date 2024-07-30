@@ -22,6 +22,7 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
     private DietNotificationDTO DietNotificationEntityToDTO(DietNotificationEntity dietNotificationEntity) {
         return DietNotificationDTO.builder()
                 .id(dietNotificationEntity.getId())
+                .email(dietNotificationEntity.getEmail())
                 .userId(dietNotificationEntity.getUserId())
                 .notificationContent(dietNotificationEntity.getNotificationContent())
                 .notificationTime(dietNotificationEntity.getNotificationTime())
@@ -32,6 +33,7 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
     public DietNotificationDTO create(DietNotificationDTO dietNotificationDTO) {
         DietNotificationEntity dietNotificationEntity = DietNotificationEntity.builder()
                 .userId(dietNotificationDTO.getUserId())
+                .email(dietNotificationDTO.getEmail())
                 .notificationContent(dietNotificationDTO.getNotificationContent())
                 .notificationTime(dietNotificationDTO.getNotificationTime())
                 .build();
