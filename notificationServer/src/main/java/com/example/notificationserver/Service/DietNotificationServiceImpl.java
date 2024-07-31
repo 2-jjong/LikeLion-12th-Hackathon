@@ -47,28 +47,4 @@ public class DietNotificationServiceImpl implements DietNotificationService {
         dietNotificationDAO.delete(id);
     }
 
-    // 초 분 시 일 월 년에 자동으로 실행되는 메서드
-    //"0 0 7, 12, 23 * * ?" 7시 12시 23시
-    //"0/20 * * * * ?" 20초마다 실행
-    @Override
-    @Scheduled(cron = "20 * * * * ?")
-    public void scheduleDietNotification() {
-        // NotificationType 에서 ID 1번과 4번의 내용을 가져옴
-        NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(1L);
-        NotificationTypeDTO notificationType2 = notificationTypeService.getNotificationTypeById(2L);
-        LocalDateTime currentDate = LocalDateTime.now();
-
-        // 내용을 결합
-        String combinedContent =
-                notificationType1.getNotificationContent()
-                + " " + currentDate + " "
-                + notificationType2.getNotificationContent();
-
-        DietNotificationDTO notification = new DietNotificationDTO();
-        notification.setEmail("test@naver.com");
-        notification.setNotificationContent(combinedContent);
-        notification.setNotificationTime(currentDate);
-        createDietNotification(notification);
-        notificationService.sendNotification(notification);
-    }
 }

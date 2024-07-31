@@ -14,6 +14,4 @@ public interface DietNotificationService {
     DietNotificationDTO updateDietNotification(DietNotificationDTO dietNotificationDTO);
 
     void deleteDietNotification(Long id);
-    void scheduleDietNotification();
-
 }
