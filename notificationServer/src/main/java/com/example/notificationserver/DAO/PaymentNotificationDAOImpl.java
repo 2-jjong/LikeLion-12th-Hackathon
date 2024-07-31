@@ -51,6 +51,7 @@ public class PaymentNotificationDAOImpl implements PaymentNotificationDAO{
         return null;
     }
 
+    @Override
     public Optional<PaymentNotificationDTO> findLatestByEmail(String email) {
         return paymentNotificationRepository.findLatestByEmail(email);
     }

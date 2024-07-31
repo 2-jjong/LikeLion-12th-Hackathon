@@ -1,12 +1,11 @@
 package com.example.notificationserver.Service;
 
 import com.example.notificationserver.DAO.PaymentNotificationDAO;
-import com.example.notificationserver.DTO.NotificationTypeDTO;
 import com.example.notificationserver.DTO.PaymentNotificationDTO;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class PaymentNotificationServiceImpl implements PaymentNotificationService{
@@ -26,6 +25,11 @@ public class PaymentNotificationServiceImpl implements PaymentNotificationServic
     @Override
     public void deletePaymentNotification(Long id) {
         paymentNotificationDAO.delete(id);
+    }
+
+    @Override
+    public Optional<PaymentNotificationDTO> findLatestByEmail(String email) {
+        return paymentNotificationDAO.findLatestByEmail(email);
     }
 
 //    @Override
