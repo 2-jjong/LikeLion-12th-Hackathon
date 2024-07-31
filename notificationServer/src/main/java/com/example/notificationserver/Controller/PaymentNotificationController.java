@@ -11,22 +11,24 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/notification/payment")
 public class PaymentNotificationController {
     private final PaymentNotificationService paymentNotificationService;
-    private final NotificationService notificationService;
 
     public PaymentNotificationController(PaymentNotificationService paymentNotificationService, NotificationService notificationService) {
         this.paymentNotificationService = paymentNotificationService;
-        this.notificationService = notificationService;
     }
 
     @PostMapping("/create")
     public ResponseEntity<PaymentNotificationDTO> createDietNotification(@RequestBody PaymentNotificationDTO paymentNotificationDTO) {
         PaymentNotificationDTO createdPaymentNotification = paymentNotificationService.createPaymentNotification(paymentNotificationDTO);
-        notificationService.sendPaymentNotification(createdPaymentNotification); // 알림 전송
         return ResponseEntity.ok(createdPaymentNotification);
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePaymentNotification(@PathVariable Long id) {
         paymentNotificationService.deletePaymentNotification(id);
         return ResponseEntity.noContent().build();
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<PaymentNotificationDTO> updatePaymentNotification(@RequestBody PaymentNotificationDTO paymentNotificationDTO) {
+        PaymentNotificationDTO updatedPaymentNotification = paymentNotificationService.updatePaymentNotification(paymentNotificationDTO);
+        return ResponseEntity.ok(updatedPaymentNotification);
     }
 }

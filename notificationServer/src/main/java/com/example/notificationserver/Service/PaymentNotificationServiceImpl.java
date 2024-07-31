@@ -23,6 +23,11 @@ public class PaymentNotificationServiceImpl implements PaymentNotificationServic
     }
 
     @Override
+    public PaymentNotificationDTO updatePaymentNotification(PaymentNotificationDTO paymentNotificationDTO) {
+        return paymentNotificationDAO.update(paymentNotificationDTO);
+    }
+
+    @Override
     public void deletePaymentNotification(Long id) {
         paymentNotificationDAO.delete(id);
     }
@@ -32,25 +37,9 @@ public class PaymentNotificationServiceImpl implements PaymentNotificationServic
         return paymentNotificationDAO.findLatestByEmail(email);
     }
 
-//    @Override
-//    @Scheduled(cron = "0 1 * * * ?")
-//    public void schedulePaymentNotification() {
-//        // NotificationType 에서 ID 3번과 4번의 내용을 가져옴
-//        NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(3L);
-//        NotificationTypeDTO notificationType2 = notificationTypeService.getNotificationTypeById(4L);
-//        LocalDateTime currentDate = LocalDateTime.now();
-//
-//        // 내용을 결합
-//        String combinedContent =
-//                notificationType1.getNotificationContent()
-//                        + " " + currentDate + " "
-//                        + notificationType2.getNotificationContent();
-//
-//        PaymentNotificationDTO notification = new PaymentNotificationDTO();
-//        notification.setEmail("test@naver.com");
-//        notification.setNotificationContent(combinedContent);
-//        notification.setNotificationTime(currentDate);
-//        createPaymentNotification(notification);
-//        notificationService.sendPaymentNotification(notification);
-//    }
+    @Override
+    public void updateLastPaymentDate(PaymentNotificationDTO paymentNotificationDTO, LocalDateTime newPaymentDate) {
+        paymentNotificationDAO.updateLastPaymentDate(paymentNotificationDTO, newPaymentDate);
+    }
+
 }

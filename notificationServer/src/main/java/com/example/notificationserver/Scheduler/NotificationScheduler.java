@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
@@ -54,17 +56,20 @@ public class NotificationScheduler {
     // 초 분 시 일 월 년에 자동으로 실행되는 메서드
     //"0 0 7, 12, 23 * * ?" 7시 12시 23시
     //"0/20 * * * * ?" 20초마다 실행
-    @Scheduled(cron = "0 1 * * * ?")    //식단 알림
+    @Scheduled(cron = "0/30 * * * * ?")    //식단 알림
     public void scheduleDietNotification() {
         // NotificationType 에서 ID 1번과 2번의 내용을 가져옴
         NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(1L);
         NotificationTypeDTO notificationType2 = notificationTypeService.getNotificationTypeById(2L);
         LocalDateTime currentDate = LocalDateTime.now();
+        // 포맷 정의: yyyy-MM-dd HH:mm:ss
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd HH:mm:ss");
+        String formattedCurrentDate = currentDate.format(formatter);
 
         // 내용을 결합
         String combinedContent =
                 notificationType1.getNotificationContent()
-                        + " " + currentDate + " "
+                        + " " + formattedCurrentDate + " "
                         + notificationType2.getNotificationContent();
 
         DietNotificationDTO notification = new DietNotificationDTO();
@@ -75,13 +80,13 @@ public class NotificationScheduler {
         notificationService.sendNotification(notification);
     }
 
-    @Scheduled(cron = "0 1 * * * ?")    //결제일 알림
+    @Scheduled(cron = "30 * * * * ?")    // 결제일 알림
     public void schedulePaymentNotification() {
         NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(3L);
         NotificationTypeDTO notificationType2 = notificationTypeService.getNotificationTypeById(4L);
         LocalDateTime currentDate = LocalDateTime.now();
         String email = "test@naver.com";
-        //결제일 데이터 중 설정 email 가장 최신 결제일 값
+        // 결제일 데이터 중 설정 email 가장 최신 결제일 값
         Optional<PaymentNotificationDTO> latestNotificationOpt = paymentNotificationService.findLatestByEmail(email);
 
         if (latestNotificationOpt.isPresent()) {
@@ -90,20 +95,25 @@ public class NotificationScheduler {
             LocalDateTime nextPaymentDate = lastPaymentDate.plusDays(7);
 
             long daysRemaining = ChronoUnit.DAYS.between(currentDate, nextPaymentDate);
-            //결제일 알림 내용 결합
+            // 결제일 알림 내용 결합
             String contentWithDaysRemaining = notificationType1.getNotificationContent()
-                    + " " + daysRemaining + " " +
+                    + " " + daysRemaining +
                     notificationType2.getNotificationContent();
 
-            PaymentNotificationDTO notification = new PaymentNotificationDTO();
-            notification.setEmail(email);
-            notification.setNotificationContent(contentWithDaysRemaining);
-            notification.setNotificationTime(currentDate);
-            paymentNotificationService.createPaymentNotification(notification);
+            // 새로운 알림 생성
+            PaymentNotificationDTO newNotification = PaymentNotificationDTO.builder()
+                    .email(email)
+                    .notificationContent(contentWithDaysRemaining)
+                    .lastPaymentDate(lastPaymentDate)  // 동일한 lastPaymentTime 사용
+                    .notificationTime(currentDate)  // 현재 시각으로 설정
+                    .build();
 
-            notificationService.sendPaymentNotification(notification);
+            // 알림 전송
+            notificationService.sendPaymentNotification(newNotification);
 
-            paymentNotificationDAO.updateLastPaymentDate(latestNotification, currentDate);
+            // 새로운 알림 저장
+            paymentNotificationService.createPaymentNotification(newNotification);
         }
     }
+
 }

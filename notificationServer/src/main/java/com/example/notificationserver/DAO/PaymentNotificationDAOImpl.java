@@ -9,15 +9,15 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Repository
-public class PaymentNotificationDAOImpl implements PaymentNotificationDAO{
+public class PaymentNotificationDAOImpl implements PaymentNotificationDAO {
     private final PaymentNotificationRepository paymentNotificationRepository;
 
     public PaymentNotificationDAOImpl(PaymentNotificationRepository paymentNotificationRepository) {
         this.paymentNotificationRepository = paymentNotificationRepository;
     }
 
-    //Entity to DTO
-    private PaymentNotificationDTO PaymentNotificationEntityToDTO(PaymentNotificationEntity paymentNotificationEntity) {
+    // Entity to DTO
+    private PaymentNotificationDTO paymentNotificationEntityToDTO(PaymentNotificationEntity paymentNotificationEntity) {
         return PaymentNotificationDTO.builder()
                 .id(paymentNotificationEntity.getId())
                 .email(paymentNotificationEntity.getEmail())
@@ -27,6 +27,7 @@ public class PaymentNotificationDAOImpl implements PaymentNotificationDAO{
                 .notificationTime(paymentNotificationEntity.getNotificationTime())
                 .build();
     }
+
     // DTO to Entity
     private PaymentNotificationEntity paymentNotificationDTOToEntity(PaymentNotificationDTO paymentNotificationDTO) {
         return PaymentNotificationEntity.builder()
@@ -41,26 +42,52 @@ public class PaymentNotificationDAOImpl implements PaymentNotificationDAO{
 
     @Override
     public PaymentNotificationDTO create(PaymentNotificationDTO paymentNotificationDTO) {
-        PaymentNotificationEntity paymentNotificationEntity = PaymentNotificationEntity.builder()
-                .userId(paymentNotificationDTO.getUserId())
-                .email(paymentNotificationDTO.getEmail())
-                .lastPaymentDate(paymentNotificationDTO.getLastPaymentDate())
-                .notificationTime(paymentNotificationDTO.getNotificationTime())
-                .build();
-        paymentNotificationRepository.save(paymentNotificationEntity);
-        return null;
+        PaymentNotificationEntity paymentNotificationEntity = paymentNotificationDTOToEntity(paymentNotificationDTO);
+        PaymentNotificationEntity savedEntity = paymentNotificationRepository.save(paymentNotificationEntity);
+        return paymentNotificationEntityToDTO(savedEntity);
     }
 
     @Override
     public Optional<PaymentNotificationDTO> findLatestByEmail(String email) {
-        return paymentNotificationRepository.findLatestByEmail(email);
+        Optional<PaymentNotificationEntity> latestEntity = paymentNotificationRepository.findFirstByEmailOrderByLastPaymentDateDesc(email);
+        return latestEntity.map(this::paymentNotificationEntityToDTO);
     }
 
     @Override
     public void updateLastPaymentDate(PaymentNotificationDTO paymentNotificationDTO, LocalDateTime newPaymentDate) {
-        PaymentNotificationEntity paymentNotificationEntity = paymentNotificationDTOToEntity(paymentNotificationDTO);
-        paymentNotificationEntity.setLastPaymentDate(newPaymentDate);
-        paymentNotificationRepository.save(paymentNotificationEntity);
+        Optional<PaymentNotificationEntity> entityOpt = paymentNotificationRepository.findById(paymentNotificationDTO.getId());
+        if (entityOpt.isPresent()) {
+            PaymentNotificationEntity paymentNotificationEntity = entityOpt.get();
+            paymentNotificationEntity.setLastPaymentDate(newPaymentDate);
+            paymentNotificationRepository.save(paymentNotificationEntity);
+        }
+    }
+
+    @Override
+    public void updateNotificationContentAndTime(PaymentNotificationDTO paymentNotificationDTO) {
+        Optional<PaymentNotificationEntity> entityOpt = paymentNotificationRepository.findById(paymentNotificationDTO.getId());
+        if (entityOpt.isPresent()) {
+            PaymentNotificationEntity paymentNotificationEntity = entityOpt.get();
+            paymentNotificationEntity.setNotificationContent(paymentNotificationDTO.getNotificationContent());
+            paymentNotificationEntity.setNotificationTime(paymentNotificationDTO.getNotificationTime());
+            paymentNotificationRepository.save(paymentNotificationEntity);
+        }
+    }
+
+    @Override
+    public PaymentNotificationDTO update(PaymentNotificationDTO paymentNotificationDTO) {
+        Optional<PaymentNotificationEntity> entityOpt = paymentNotificationRepository.findById(paymentNotificationDTO.getId());
+        if (entityOpt.isPresent()) {
+            PaymentNotificationEntity paymentNotificationEntity = entityOpt.get();
+            paymentNotificationEntity.setUserId(paymentNotificationDTO.getUserId());
+            paymentNotificationEntity.setEmail(paymentNotificationDTO.getEmail());
+            paymentNotificationEntity.setNotificationContent(paymentNotificationDTO.getNotificationContent());
+            paymentNotificationEntity.setLastPaymentDate(paymentNotificationDTO.getLastPaymentDate());
+            paymentNotificationEntity.setNotificationTime(paymentNotificationDTO.getNotificationTime());
+            PaymentNotificationEntity updatedEntity = paymentNotificationRepository.save(paymentNotificationEntity);
+            return paymentNotificationEntityToDTO(updatedEntity);
+        }
+        return null;
     }
 
     @Override

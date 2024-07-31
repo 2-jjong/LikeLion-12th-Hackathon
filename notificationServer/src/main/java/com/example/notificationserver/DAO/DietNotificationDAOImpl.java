@@ -73,18 +73,5 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
     public void delete(Long id) {
         dietNotificationRepository.deleteById(id);
     }
-/*
-    @Override
-    public List<DietNotificationDTO> findByUserId(Long userId) {
-        String sql = "SELECT * FROM diet_notifications WHERE user_id = ?";
-        return jdbcTemplate.query(sql, new Object[]{userId}, (rs, rowNum) ->
-                new DietNotificationDTO(
-                        rs.getLong("id"),
-                        rs.getLong("user_id"),
-                        rs.getString("notification_content")
-                )
-        );
 
-    }
-*/
 }
