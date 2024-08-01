@@ -43,6 +43,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         //configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000")); // 프론트엔드 주소
         configuration.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:3000")); // 프론트엔드 주소
+        configuration.setAllowedOrigins(Collections.singletonList("http://192.168.61.42:3000")); // 프론트엔드 주소
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true);

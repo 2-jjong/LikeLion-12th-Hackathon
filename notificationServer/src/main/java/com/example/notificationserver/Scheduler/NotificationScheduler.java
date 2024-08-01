@@ -24,7 +24,6 @@ public class NotificationScheduler {
     private final DietNotificationService dietNotificationService;
     private final NotificationService notificationService;
     private final PaymentNotificationService paymentNotificationService;
-    private final PaymentNotificationDAO paymentNotificationDAO;
 
     @Autowired
     public NotificationScheduler(NotificationSender notificationSender, NotificationTypeService notificationTypeService, DietNotificationService dietNotificationService, NotificationService notificationService, PaymentNotificationService paymentNotificationService, PaymentNotificationDAO paymentNotificationDAO) {
@@ -33,7 +32,6 @@ public class NotificationScheduler {
         this.dietNotificationService = dietNotificationService;
         this.notificationService = notificationService;
         this.paymentNotificationService = paymentNotificationService;
-        this.paymentNotificationDAO = paymentNotificationDAO;
     }
 
     //정보 가져오는거 (Maybe?)
@@ -80,7 +78,7 @@ public class NotificationScheduler {
         notificationService.sendNotification(notification);
     }
 
-    @Scheduled(cron = "30 * * * * ?")    // 결제일 알림
+    @Scheduled(cron = "0/30 * * * * ?")    // 결제일 알림
     public void schedulePaymentNotification() {
         NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(3L);
         NotificationTypeDTO notificationType2 = notificationTypeService.getNotificationTypeById(4L);
