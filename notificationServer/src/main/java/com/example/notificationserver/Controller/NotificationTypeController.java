@@ -2,12 +2,10 @@ package com.example.notificationserver.Controller;
 
 import com.example.notificationserver.DTO.NotificationTypeDTO;
 import com.example.notificationserver.Service.NotificationTypeService;
-import com.example.notificationserver.Service.NotificationService;
+import com.example.notificationserver.Service.NotificationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/notification_type")
@@ -15,7 +13,7 @@ public class NotificationTypeController {
     private final NotificationTypeService NotificationTypeService;
 
     @Autowired
-    public NotificationTypeController(NotificationTypeService NotificationTypeService, NotificationService notificationService) {
+    public NotificationTypeController(NotificationTypeService NotificationTypeService, NotificationServiceImpl notificationServiceImpl) {
         this.NotificationTypeService = NotificationTypeService;
     }
 

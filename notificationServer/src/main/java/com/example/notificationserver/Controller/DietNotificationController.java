@@ -2,7 +2,7 @@ package com.example.notificationserver.Controller;
 
 import com.example.notificationserver.DTO.DietNotificationDTO;
 import com.example.notificationserver.Service.DietNotificationService;
-import com.example.notificationserver.Service.NotificationService;
+import com.example.notificationserver.Service.NotificationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,18 +13,18 @@ import java.util.List;
 @RequestMapping("/notification/diet")
 public class DietNotificationController {
     private final DietNotificationService dietNotificationService;
-    private final NotificationService notificationService;
+    private final NotificationServiceImpl notificationServiceImpl;
 
     @Autowired
-    public DietNotificationController(DietNotificationService dietNotificationService, NotificationService notificationService) {
+    public DietNotificationController(DietNotificationService dietNotificationService, NotificationServiceImpl notificationServiceImpl) {
         this.dietNotificationService = dietNotificationService;
-        this.notificationService = notificationService;
+        this.notificationServiceImpl = notificationServiceImpl;
     }
 
     @PostMapping("/create")
     public ResponseEntity<DietNotificationDTO> createDietNotification(@RequestBody DietNotificationDTO dietNotificationDTO) {
         DietNotificationDTO createdDietNotification = dietNotificationService.createDietNotification(dietNotificationDTO);
-        notificationService.sendNotification(createdDietNotification); // 알림 전송
+        notificationServiceImpl.sendNotification(createdDietNotification); // 알림 전송
         return ResponseEntity.ok(createdDietNotification);
     }
 
@@ -45,7 +45,7 @@ public class DietNotificationController {
     public ResponseEntity<DietNotificationDTO> updateDietNotification(@PathVariable Long id, @RequestBody DietNotificationDTO dietNotificationDTO) {
         dietNotificationDTO.setId(id);
         DietNotificationDTO updatedDietNotification = dietNotificationService.updateDietNotification(dietNotificationDTO);
-        notificationService.sendNotification(updatedDietNotification); // 알림 전송
+        notificationServiceImpl.sendNotification(updatedDietNotification); // 알림 전송
         return ResponseEntity.ok(updatedDietNotification);
     }
 

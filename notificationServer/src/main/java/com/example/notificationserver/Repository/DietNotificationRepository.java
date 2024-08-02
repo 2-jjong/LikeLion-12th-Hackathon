@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface DietNotificationRepository extends JpaRepository<DietNotificationEntity, Long> {
     List<DietNotificationEntity> findByUserId(Long userId);
+    DietNotificationEntity findTopByOrderByNotificationTime();
 }

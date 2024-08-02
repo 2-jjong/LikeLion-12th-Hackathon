@@ -15,7 +15,7 @@ public class DietNotificationEntity {
     private Long id;
     @Column
     private Long userId;
-    @Column
+    @Column(name = "email")
     private String email;
     @Column
     private String notificationContent;

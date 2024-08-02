@@ -1,16 +1,12 @@
 package com.example.notificationserver.Scheduler;
 
 import com.example.notificationserver.DAO.PaymentNotificationDAO;
-import com.example.notificationserver.DTO.DietNotificationDTO;
-import com.example.notificationserver.DTO.ExternalDietNotificationDTO;
-import com.example.notificationserver.DTO.NotificationTypeDTO;
-import com.example.notificationserver.DTO.PaymentNotificationDTO;
+import com.example.notificationserver.DTO.*;
 import com.example.notificationserver.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -19,19 +15,46 @@ import java.util.Optional;
 @Component
 public class NotificationScheduler {
 
+    private  DietNotificationDTO dietNotificationDTO;
     private final NotificationSender notificationSender;
     private final NotificationTypeService notificationTypeService;
     private final DietNotificationService dietNotificationService;
-    private final NotificationService notificationService;
+    private final NotificationServiceImpl notificationServiceImpl;
     private final PaymentNotificationService paymentNotificationService;
+    private final SurveyNotificationService surveyNotificationService;
 
     @Autowired
-    public NotificationScheduler(NotificationSender notificationSender, NotificationTypeService notificationTypeService, DietNotificationService dietNotificationService, NotificationService notificationService, PaymentNotificationService paymentNotificationService, PaymentNotificationDAO paymentNotificationDAO) {
+    public NotificationScheduler(NotificationSender notificationSender, NotificationTypeService notificationTypeService, DietNotificationService dietNotificationService, NotificationServiceImpl notificationServiceImpl, PaymentNotificationService paymentNotificationService, PaymentNotificationDAO paymentNotificationDAO, SurveyNotificationService surveyNotificationService) {
         this.notificationSender = notificationSender;
         this.notificationTypeService = notificationTypeService;
         this.dietNotificationService = dietNotificationService;
-        this.notificationService = notificationService;
+        this.notificationServiceImpl = notificationServiceImpl;
         this.paymentNotificationService = paymentNotificationService;
+        this.surveyNotificationService = surveyNotificationService;
+    }
+
+    //설문조사 알림
+    @Scheduled(cron = "0/10 * * * * *")
+    public void scheduledSurveyNotifications() {
+        // NotificationType에서 ID 5번의 내용을 가져옴
+        NotificationTypeDTO notificationType = notificationTypeService.getNotificationTypeById(5L);
+        LocalDateTime currentDate = LocalDateTime.now();
+        // 포맷 정의: MM-dd
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd");
+        String formattedCurrentDate = currentDate.format(formatter);
+
+        // 내용을 결합
+        String combinedContent = formattedCurrentDate + notificationType.getNotificationContent();
+
+        // SurveyNotificationDTO 생성 및 설정
+        SurveyNotificationDTO notification = new SurveyNotificationDTO();
+        notification.setEmail(dietNotificationService.getLatestDietNotificationToString());
+        notification.setNotificationContent(combinedContent);
+        notification.setNotificationTime(currentDate);
+
+        // SurveyNotification 생성 및 전송
+        surveyNotificationService.createSurveyNotification(notification);
+        notificationServiceImpl.sendSurveyNotification(notification);
     }
 
     //정보 가져오는거 (Maybe?)
@@ -54,7 +77,7 @@ public class NotificationScheduler {
     // 초 분 시 일 월 년에 자동으로 실행되는 메서드
     //"0 0 7, 12, 23 * * ?" 7시 12시 23시
     //"0/20 * * * * ?" 20초마다 실행
-    @Scheduled(cron = "0/30 * * * * ?")    //식단 알림
+    @Scheduled(cron = "0/7 * * * * ?")    //식단 알림
     public void scheduleDietNotification() {
         // NotificationType 에서 ID 1번과 2번의 내용을 가져옴
         NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(1L);
@@ -75,7 +98,7 @@ public class NotificationScheduler {
         notification.setNotificationContent(combinedContent);
         notification.setNotificationTime(currentDate);
         dietNotificationService.createDietNotification(notification);
-        notificationService.sendNotification(notification);
+        notificationServiceImpl.sendNotification(notification);
     }
 
     @Scheduled(cron = "0/30 * * * * ?")    // 결제일 알림
@@ -107,7 +130,7 @@ public class NotificationScheduler {
                     .build();
 
             // 알림 전송
-            notificationService.sendPaymentNotification(newNotification);
+            notificationServiceImpl.sendPaymentNotification(newNotification);
 
             // 새로운 알림 저장
             paymentNotificationService.createPaymentNotification(newNotification);

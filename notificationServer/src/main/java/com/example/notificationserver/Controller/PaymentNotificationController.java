@@ -1,8 +1,7 @@
 package com.example.notificationserver.Controller;
 
-import com.example.notificationserver.DTO.DietNotificationDTO;
 import com.example.notificationserver.DTO.PaymentNotificationDTO;
-import com.example.notificationserver.Service.NotificationService;
+import com.example.notificationserver.Service.NotificationServiceImpl;
 import com.example.notificationserver.Service.PaymentNotificationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 public class PaymentNotificationController {
     private final PaymentNotificationService paymentNotificationService;
 
-    public PaymentNotificationController(PaymentNotificationService paymentNotificationService, NotificationService notificationService) {
+    public PaymentNotificationController(PaymentNotificationService paymentNotificationService, NotificationServiceImpl notificationServiceImpl) {
         this.paymentNotificationService = paymentNotificationService;
     }
 
