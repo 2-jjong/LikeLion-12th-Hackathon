@@ -12,7 +12,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/notification_type")
 public class NotificationTypeController {
-    private final NotificationTypeService NotificationTypeService;
+    private final NotificationType,Service NotificationTypeService;
 
     @Autowired
     public NotificationTypeController(NotificationTypeService NotificationTypeService, NotificationService notificationService) {
