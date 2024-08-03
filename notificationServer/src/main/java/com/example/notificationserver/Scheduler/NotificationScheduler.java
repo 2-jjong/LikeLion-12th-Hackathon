@@ -13,8 +13,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public interface NotificationScheduler {
-    void fetchAndStorePaymentNotificationNotification();
     void scheduleDietNotification();
+    void scheduledPaymentNotificationTasks();
     void schedulePaymentNotification();
     void scheduledSurveyNotifications();
 }

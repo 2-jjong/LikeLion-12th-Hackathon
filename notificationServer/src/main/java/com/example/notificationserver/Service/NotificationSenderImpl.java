@@ -21,57 +21,43 @@ public class NotificationSenderImpl implements NotificationSender{
         this.restTemplate = restTemplate;
     }
 
-    //타 서버 url
-    @Override
-    public ExternalDietNotificationDTO fetchDietNotificationNotification(String url) {
-        // REST API를 통해 데이터 가져오기
-        ExternalDietApiResponseDTO response = restTemplate.getForObject(url, ExternalDietApiResponseDTO.class);
-
-        //필요한 데이터만 추출하여 ExternalDietNotificationDTO에 저장
-        if (response != null) {
-            return new ExternalDietNotificationDTO(response.getEmail(), response.getDiet(), response.getContent());
-        } else {
-            return null;
-        }
-    }
-
-    @Override
-    public void sendDietNotificationNotification(ExternalDietNotificationDTO externalDTO) {
-        String message = externalDTO.getNotificationContent();
-        List<WebSocketSession> sessions = NotificationWebSocketHandler.getSessionsByEmail(externalDTO.getEmail());
-
-        for (WebSocketSession session : sessions) {
-            try {
-                session.sendMessage(new TextMessage(message));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void sendPaymentNotificationNotification(ExternalPaymentNotificationDTO externalDTO) {
-        String message = externalDTO.getEmail();
-        List<WebSocketSession> sessions = NotificationWebSocketHandler.getSessionsByEmail(externalDTO.getEmail());
-
-        for (WebSocketSession session : sessions) {
-            try {
-                session.sendMessage(new TextMessage(message));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public ExternalPaymentNotificationDTO fetchPaymentNotificationNotification(String url) {
-        ExternalPaymentApiResponseDTO response = restTemplate.getForObject(url, ExternalPaymentApiResponseDTO.class);
-
-        //필요한 데이터만 추출하여 ExternalDietNotificationDTO에 저장
-        if (response != null) {
-            return new ExternalPaymentNotificationDTO(response.getEmail(), response.getLastPaymentDate());
-        } else {
-            return null;
-        }
-    }
+//    @Override
+//    public void sendDietNotificationNotification(ExternalDietNotificationDTO externalDTO) {
+//        String message = externalDTO.getDiet();
+//        List<WebSocketSession> sessions = NotificationWebSocketHandler.getSessionsByEmail(externalDTO.getEmail());
+//
+//        for (WebSocketSession session : sessions) {
+//            try {
+//                session.sendMessage(new TextMessage(message));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public void sendPaymentNotificationNotification(ExternalPaymentNotificationDTO externalDTO) {
+//        String message = externalDTO.getEmail();
+//        List<WebSocketSession> sessions = NotificationWebSocketHandler.getSessionsByEmail(externalDTO.getEmail());
+//
+//        for (WebSocketSession session : sessions) {
+//            try {
+//                session.sendMessage(new TextMessage(message));
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
+//
+//    @Override
+//    public ExternalPaymentNotificationDTO fetchPaymentNotificationNotification(String url) {
+//        ExternalPaymentApiResponseDTO response = restTemplate.getForObject(url, ExternalPaymentApiResponseDTO.class);
+//
+//        //필요한 데이터만 추출하여 ExternalDietNotificationDTO에 저장
+//        if (response != null) {
+//            return new ExternalPaymentNotificationDTO(response.getEmail(), response.getLastPaymentDate());
+//        } else {
+//            return null;
+//        }
+//    }
 }

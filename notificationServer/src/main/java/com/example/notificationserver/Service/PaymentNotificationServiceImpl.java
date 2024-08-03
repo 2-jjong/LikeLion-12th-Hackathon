@@ -32,14 +32,5 @@ public class PaymentNotificationServiceImpl implements PaymentNotificationServic
         paymentNotificationDAO.delete(id);
     }
 
-    @Override
-    public Optional<PaymentNotificationDTO> findLatestByEmail(String email) {
-        return paymentNotificationDAO.findLatestByEmail(email);
-    }
-
-    @Override
-    public void updateLastPaymentDate(PaymentNotificationDTO paymentNotificationDTO, LocalDateTime newPaymentDate) {
-        paymentNotificationDAO.updateLastPaymentDate(paymentNotificationDTO, newPaymentDate);
-    }
 
 }

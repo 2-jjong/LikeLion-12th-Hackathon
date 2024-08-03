@@ -12,7 +12,6 @@ public class PaymentNotificationDTO {
     private Long userId;
     private String email;
     private String notificationContent;
-    private LocalDateTime lastPaymentDate;
     private LocalDateTime notificationTime;
 
     @Builder
@@ -20,13 +19,11 @@ public class PaymentNotificationDTO {
                                   Long userId,
                                   String email,
                                   String notificationContent,
-                                  LocalDateTime lastPaymentDate,
                                   LocalDateTime notificationTime){
         this.id = id;
         this.userId = userId;
         this.email = email;
         this.notificationContent = notificationContent;
-        this.lastPaymentDate = lastPaymentDate;
         this.notificationTime = notificationTime;
     }
 }

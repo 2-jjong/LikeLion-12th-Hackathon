@@ -9,6 +9,6 @@ public interface PaymentNotificationService {
     PaymentNotificationDTO createPaymentNotification(PaymentNotificationDTO paymentNotificationDTO);
     void deletePaymentNotification(Long id);
     PaymentNotificationDTO updatePaymentNotification(PaymentNotificationDTO paymentNotificationDTO);
-    Optional<PaymentNotificationDTO> findLatestByEmail(String email);
-    void updateLastPaymentDate(PaymentNotificationDTO paymentNotificationDTO, LocalDateTime newPaymentDate);
+    //Optional<PaymentNotificationDTO> findLatestByEmail(String email);
+    //void updateLastPaymentDate(PaymentNotificationDTO paymentNotificationDTO, LocalDateTime newPaymentDate);
 }

@@ -2,14 +2,18 @@ package com.example.notificationserver.Scheduler;
 
 import com.example.notificationserver.DAO.PaymentNotificationDAO;
 import com.example.notificationserver.DTO.*;
+import com.example.notificationserver.Entity.ExternalPaymentInfoEntity;
+import com.example.notificationserver.Repository.ExternalPaymentInfoRepository;
 import com.example.notificationserver.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -22,41 +26,28 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
     private final PaymentNotificationService paymentNotificationService;
 
     private final SurveyNotificationService surveyNotificationService;
+    private final ExternalPaymentInfoRepository externalPaymentInfoRepository;
+    private final CommunicationService communicationService;
 
     @Autowired
-    public NotificationSchedulerImpl(NotificationSender notificationSender, NotificationTypeService notificationTypeService, DietNotificationService dietNotificationService, NotificationService notificationService, PaymentNotificationService paymentNotificationService, PaymentNotificationDAO paymentNotificationDAO, SurveyNotificationService surveyNotificationService) {
+    public NotificationSchedulerImpl(NotificationSender notificationSender, NotificationTypeService notificationTypeService, DietNotificationService dietNotificationService, NotificationService notificationService, PaymentNotificationService paymentNotificationService, PaymentNotificationDAO paymentNotificationDAO, SurveyNotificationService surveyNotificationService, ExternalPaymentInfoRepository externalPaymentInfoRepository, CommunicationService communicationService) {
         this.notificationSender = notificationSender;
         this.notificationTypeService = notificationTypeService;
         this.dietNotificationService = dietNotificationService;
         this.notificationService = notificationService;
         this.paymentNotificationService = paymentNotificationService;
         this.surveyNotificationService = surveyNotificationService;
+        this.externalPaymentInfoRepository = externalPaymentInfoRepository;
+        this.communicationService = communicationService;
     }
 
-    //정보 가져오는거 (Maybe?)
-    @Scheduled(cron = "0 0 7 * * *")
-    @Override
-    public void fetchAndStorePaymentNotificationNotification() {
-        String url = "http://127.0.0.1:3000/notification/diet"; // 실제 서버 URL
-        ExternalPaymentNotificationDTO externalDTO = notificationSender.fetchPaymentNotificationNotification(url);
-
-        // 필요한 정보만 추출
-        PaymentNotificationDTO paymentNotificationDTO = new PaymentNotificationDTO();
-        paymentNotificationDTO.setEmail(externalDTO.getEmail());
-        //여기에 내가 생각했던 내용물 저장하면 될 듯? Maybe... 어케하노 시@부럴
-        paymentNotificationDTO.setLastPaymentDate(externalDTO.getLastPaymentDate());
-
-        //DB에 저장시키기
-        notificationSender.sendPaymentNotificationNotification(externalDTO);
-    }
-
-    // 초 분 시 일 월 년에 자동으로 실행되는 메서드
+    // 초 분 시 일 월 요일에 자동으로 실행되는 메서드
     //"0 0 7, 12, 23 * * ?" 7시 12시 23시
     //"0/20 * * * * ?" 20초마다 실행
     //토요일
     //@Scheduled(cron = "0 0 19 ? * SAT")    //식단 알림
     @Override
-    @Scheduled(cron = "0/1 * * * * ?")
+    //@Scheduled(cron = "0/9 * * * * ?")
     public void scheduleDietNotification() {
         // NotificationType 에서 ID 1번과 2번의 내용을 가져옴
         NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(1L);
@@ -73,7 +64,7 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
                         + notificationType2.getNotificationContent();
 
         DietNotificationDTO notification = new DietNotificationDTO();
-        notification.setEmail("son@naver.com");
+        notification.setEmail("user@naver.com");
         notification.setNotificationContent(combinedContent);
         notification.setNotificationTime(currentDate);
         dietNotificationService.createDietNotification(notification);
@@ -81,31 +72,27 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
     }
 
     @Override
-    @Scheduled(cron = "1 * * * * ?")    // 결제일 알림
+    @Scheduled(cron = "0/5 * * * * ?")    // 결제일 알림
+    public void scheduledPaymentNotificationTasks() {
+        ExternalPaymentNotificationDTO userEmailsDTO = communicationService.getUserEmails();
+        if (userEmailsDTO != null) {
+            communicationService.saveToExternalPaymentInfoEntity(userEmailsDTO);
+        }
+        schedulePaymentNotification();
+    }
+    @Override
     public void schedulePaymentNotification() {
-        NotificationTypeDTO notificationType1 = notificationTypeService.getNotificationTypeById(3L);
-        NotificationTypeDTO notificationType2 = notificationTypeService.getNotificationTypeById(4L);
+        NotificationTypeDTO notificationType = notificationTypeService.getNotificationTypeById(3L);
         LocalDateTime currentDate = LocalDateTime.now();
-        String email = "son@naver.com";
-        // 결제일 데이터 중 설정 email 가장 최신 결제일 값
-        Optional<PaymentNotificationDTO> latestNotificationOpt = paymentNotificationService.findLatestByEmail(email);
 
-        if (latestNotificationOpt.isPresent()) {
-            PaymentNotificationDTO latestNotification = latestNotificationOpt.get();
-            LocalDateTime lastPaymentDate = latestNotification.getLastPaymentDate();
-            LocalDateTime nextPaymentDate = lastPaymentDate.plusDays(7);
+        List<ExternalPaymentInfoEntity> pendingNotifications = externalPaymentInfoRepository.findByProcessedFalseAndDate(LocalDate.now());
 
-            long daysRemaining = ChronoUnit.DAYS.between(currentDate, nextPaymentDate);
-            // 결제일 알림 내용 결합
-            String contentWithDaysRemaining = notificationType1.getNotificationContent()
-                    + " " + daysRemaining +
-                    notificationType2.getNotificationContent();
-
+        for (ExternalPaymentInfoEntity paymentInfo : pendingNotifications) {
+            String email = paymentInfo.getEmail();
             // 새로운 알림 생성
             PaymentNotificationDTO newNotification = PaymentNotificationDTO.builder()
                     .email(email)
-                    .notificationContent(contentWithDaysRemaining)
-                    .lastPaymentDate(lastPaymentDate)  // 동일한 lastPaymentTime 사용
+                    .notificationContent(notificationType.getNotificationContent())
                     .notificationTime(currentDate)  // 현재 시각으로 설정
                     .build();
 
@@ -114,6 +101,10 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
 
             // 새로운 알림 저장
             paymentNotificationService.createPaymentNotification(newNotification);
+
+            // processed를 true로 업데이트
+            paymentInfo.setProcessed(true);
+            externalPaymentInfoRepository.save(paymentInfo);
         }
     }
 
@@ -133,7 +124,7 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
 
         // SurveyNotificationDTO 생성 및 설정
         SurveyNotificationDTO notification = new SurveyNotificationDTO();
-        notification.setEmail(dietNotificationService.getLatestDietNotificationToString());
+        notification.setEmail("응애");
         notification.setNotificationContent(combinedContent);
         notification.setNotificationTime(currentDate);
 
@@ -141,5 +132,4 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
         surveyNotificationService.createSurveyNotification(notification);
         notificationService.sendSurveyNotification(notification);
     }
-
 }

@@ -3,10 +3,14 @@ package com.example.notificationserver.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
-@Table(name = "user_payment")
+@Table(name = "user_payment", indexes = {
+        @Index(name = "notification_processed", columnList = "processed, date")
+})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -18,11 +22,14 @@ public class ExternalPaymentInfoEntity {
     @Column
     private String email;
     @Column
-    private LocalDateTime lastPaymentDate;
+    private boolean processed = false;
+    @Column
+    private LocalDate date;
 
     @Builder
-    public ExternalPaymentInfoEntity(String email, LocalDateTime lastPaymentDate){
+    public ExternalPaymentInfoEntity(String email, boolean processed, LocalDate date){
         this.email = email;
-        this.lastPaymentDate = lastPaymentDate;
+        this.processed = processed;
+        this.date = date;
     }
 }

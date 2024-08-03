@@ -10,6 +10,4 @@ import java.util.Optional;
 @Repository
 public interface PaymentNotificationRepository extends JpaRepository<PaymentNotificationEntity, Long> {
     List<PaymentNotificationEntity> findByUserId(Long userId);
-
-    Optional<PaymentNotificationEntity> findFirstByEmailOrderByLastPaymentDateDesc(String email);
 }

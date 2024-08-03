@@ -27,8 +27,5 @@ public class PaymentNotificationEntity {
     private String notificationContent;
 
     @Column
-    private LocalDateTime lastPaymentDate;
-
-    @Column
     private LocalDateTime notificationTime;
 }

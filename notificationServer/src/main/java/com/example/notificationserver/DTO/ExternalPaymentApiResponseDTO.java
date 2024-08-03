@@ -6,17 +6,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 public class ExternalPaymentApiResponseDTO {
-    private String email;
-    private LocalDateTime lastPaymentDate;
+    private List<String> emails;
 
     @Builder
-    public ExternalPaymentApiResponseDTO(String email, LocalDateTime lastPaymentDate){
-        this.email = email;
-        this.lastPaymentDate = lastPaymentDate;
+    public ExternalPaymentApiResponseDTO(List<String> emails){
+        this.emails = emails;
     }
 }

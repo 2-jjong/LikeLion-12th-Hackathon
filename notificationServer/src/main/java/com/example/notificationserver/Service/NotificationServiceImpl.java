@@ -24,7 +24,7 @@ public class NotificationServiceImpl implements NotificationService {
         messagingTemplate.convertAndSend("/topic/notification/payment/" + notification.getEmail(), notification);
     }
     @Override
-    public void sendSurveyNotification(SurveyNotificationDTO notification) {
+    public void sendSurveyNotification(SurveyNotificationDTO notification) { // 여기다가 SurveyJsonDTO 하나 더 해서 보내야할 거 같음.
         messagingTemplate.convertAndSend("/topic/notification/survey/" + notification.getEmail(), notification);
     }
 }
