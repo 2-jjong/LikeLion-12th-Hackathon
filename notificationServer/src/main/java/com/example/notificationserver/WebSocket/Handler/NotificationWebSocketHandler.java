@@ -30,6 +30,10 @@ public class NotificationWebSocketHandler extends TextWebSocketHandler {
         return userSessions.getOrDefault(userId, new ArrayList<>());
     }
 
+    public static List<WebSocketSession> getSessionsByEmail(String email) {
+        return userSessions.getOrDefault(email, new ArrayList<>());
+    }
+
     public static void addSession(Long userId, WebSocketSession session) {
         userSessions.computeIfAbsent(userId, k -> new ArrayList<>()).add(session);
     }

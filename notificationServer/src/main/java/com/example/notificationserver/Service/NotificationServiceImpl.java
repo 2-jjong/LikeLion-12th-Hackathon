@@ -15,12 +15,15 @@ public class NotificationServiceImpl implements NotificationService {
         this.messagingTemplate = messagingTemplate;
     }
 
+    @Override
     public void sendNotification(DietNotificationDTO notification) {
         messagingTemplate.convertAndSend("/topic/notification/diet/" + notification.getEmail(), notification);
     }
+    @Override
     public void sendPaymentNotification(PaymentNotificationDTO notification) {
         messagingTemplate.convertAndSend("/topic/notification/payment/" + notification.getEmail(), notification);
     }
+    @Override
     public void sendSurveyNotification(SurveyNotificationDTO notification) {
         messagingTemplate.convertAndSend("/topic/notification/survey/" + notification.getEmail(), notification);
     }

@@ -5,13 +5,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class ExternalDietApiResponseDTO {
-    private Long userId;
+    private String email;
     private String diet;
     private String content;
 
     @Builder
-    private ExternalDietApiResponseDTO(Long userId, String content) {
-        this.userId = userId;
+    private ExternalDietApiResponseDTO(String email, String content) {
+        this.email = email;
         this.content = content;
     }
 }

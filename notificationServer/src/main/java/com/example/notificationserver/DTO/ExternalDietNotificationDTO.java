@@ -6,13 +6,13 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 public class ExternalDietNotificationDTO {
-    private Long userId;
+    private String email;
     private String diet;
     private String notificationContent;
 
     @Builder
-    public ExternalDietNotificationDTO(Long userId, String diet, String notificationContent){
-        this.userId = userId;
+    public ExternalDietNotificationDTO(String email, String diet, String notificationContent){
+        this.email = email;
         this.diet = diet;
         this.notificationContent = notificationContent;
     }
