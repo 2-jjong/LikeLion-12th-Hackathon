@@ -44,15 +44,10 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
     //"0/20 * * * * ?" 20초마다 실행
     //토요일
     @Override
-    @Scheduled(cron = "0 0 7 * * ?")    // 금일 Diet 정보 받아오기
-    public void scheduledDietNotificationTasks() {
-        LocalDate today = LocalDate.now();
-        communicationService.getUserDietEmails(today.toString());
-    }
-
-    @Override
     @Scheduled(cron = "0 0 7 * * ?") // 아침 알림: 매일 7시에 실행
     public void scheduleBreakfastNotification() {
+        LocalDate today = LocalDate.now();
+        communicationService.getUserDietEmails(today.toString());
         sendDietNotification("아침");
     }
 
@@ -88,14 +83,12 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일");
                 String formattedCurrentDate = currentDate.format(formatter);
 
-                StringBuilder combinedContent = new StringBuilder(formattedCurrentDate + " 식단은 ");
+                StringBuilder combinedContent = new StringBuilder();
 
-                if ("아침".equals(mealTime)) {
-                    combinedContent.append(diet.getBreakfast());
-                } else if ("점심".equals(mealTime)) {
-                    combinedContent.append(diet.getLunch());
-                } else if ("저녁".equals(mealTime)) {
-                    combinedContent.append(diet.getDinner());
+                switch (mealTime) {
+                    case "아침" -> combinedContent.append(formattedCurrentDate).append(" 아침 식단은 ").append(diet.getBreakfast());
+                    case "점심" -> combinedContent.append(formattedCurrentDate).append(" 점심 식단은 ").append(diet.getLunch());
+                    case "저녁" -> combinedContent.append(formattedCurrentDate).append(" 저녁 식단은 ").append(diet.getDinner());
                 }
 
                 combinedContent.append(" 입니다~");
@@ -108,12 +101,10 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
                 dietNotificationService.createDietNotification(notification);
                 notificationService.sendNotification(notification);
 
-                if ("아침".equals(mealTime)) {
-                    diet.setProcessedBreakfast(true);
-                } else if ("점심".equals(mealTime)) {
-                    diet.setProcessedLunch(true);
-                } else if ("저녁".equals(mealTime)) {
-                    diet.setProcessedDinner(true);
+                switch (mealTime) {
+                    case "아침" -> diet.setProcessedBreakfast(true);
+                    case "점심" -> diet.setProcessedLunch(true);
+                    case "저녁" -> diet.setProcessedDinner(true);
                 }
                 externalDietInfoRepository.save(diet);
             }

@@ -13,8 +13,6 @@ public class DietNotificationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
-    private Long userId;
     @Column(name = "email")
     private String email;
     @Column
@@ -23,25 +21,10 @@ public class DietNotificationEntity {
     private LocalDateTime notificationTime;
 
     @Builder
-    public DietNotificationEntity(Long userId, String email, String notificationContent, LocalDateTime notificationTime){
-        this.userId = userId;
+    public DietNotificationEntity(String email, String notificationContent, LocalDateTime notificationTime){
         this.email = email;
         this.notificationContent = notificationContent;
         this.notificationTime = notificationTime;
     }
-
-
-    public void updateUserId(Long userId){
-        this.userId = userId;
-    }
-
-    public void updateNotificationContent(String notificationContent){
-        this.notificationContent = notificationContent;
-    }
-
-    public void updateNotificationTime(LocalDateTime notificationTime){
-        this.notificationTime = notificationTime;
-    }
-
 
 }

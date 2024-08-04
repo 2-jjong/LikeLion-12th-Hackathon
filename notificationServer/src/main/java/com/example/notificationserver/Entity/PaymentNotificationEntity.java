@@ -18,9 +18,6 @@ public class PaymentNotificationEntity {
     private Long id;
 
     @Column
-    private Long userId;
-
-    @Column
     private String email;
 
     @Column

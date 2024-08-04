@@ -23,7 +23,6 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
         return DietNotificationDTO.builder()
                 .id(dietNotificationEntity.getId())
                 .email(dietNotificationEntity.getEmail())
-                .userId(dietNotificationEntity.getUserId())
                 .notificationContent(dietNotificationEntity.getNotificationContent())
                 .notificationTime(dietNotificationEntity.getNotificationTime())
                 .build();
@@ -32,7 +31,6 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
     @Override
     public DietNotificationDTO create(DietNotificationDTO dietNotificationDTO) {
         DietNotificationEntity dietNotificationEntity = DietNotificationEntity.builder()
-                .userId(dietNotificationDTO.getUserId())
                 .email(dietNotificationDTO.getEmail())
                 .notificationContent(dietNotificationDTO.getNotificationContent())
                 .notificationTime(dietNotificationDTO.getNotificationTime())
@@ -50,13 +48,6 @@ public class DietNotificationDAOImpl implements DietNotificationDAO {
         return DietNotificationEntityToDTO(dietNotificationEntity);
     }
 
-    @Override
-    public List<DietNotificationDTO> findByUserId(Long userId) {
-        List<DietNotificationEntity> DietNotificationEntities = dietNotificationRepository.findByUserId(userId);
-        return DietNotificationEntities.stream()
-                .map(this::DietNotificationEntityToDTO)
-                .collect(Collectors.toList());
-    }
 
     @Override
     public DietNotificationDTO update(DietNotificationDTO dietNotificationDTO) {

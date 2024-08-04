@@ -16,7 +16,6 @@ public interface NotificationScheduler {
     void scheduleBreakfastNotification();
     void scheduleLunchNotification();
     void scheduleDinnerNotification();
-    void scheduledDietNotificationTasks();
     void sendDietNotification(String mealTime);
     void scheduledPaymentNotificationTasks();
     void schedulePaymentNotification();

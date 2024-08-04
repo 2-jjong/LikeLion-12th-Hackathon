@@ -35,12 +35,6 @@ public class DietNotificationController {
         return ResponseEntity.ok(dietNotificationDTO);
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<DietNotificationDTO>> getDietNotificationsByUserId(@PathVariable Long userId) {
-        List<DietNotificationDTO> dietNotificationDTOS = dietNotificationService.getDietNotificationsByUserId(userId);
-        return ResponseEntity.ok(dietNotificationDTOS);
-    }
-
     @PutMapping("/{id}")
     public ResponseEntity<DietNotificationDTO> updateDietNotification(@PathVariable Long id, @RequestBody DietNotificationDTO dietNotificationDTO) {
         dietNotificationDTO.setId(id);

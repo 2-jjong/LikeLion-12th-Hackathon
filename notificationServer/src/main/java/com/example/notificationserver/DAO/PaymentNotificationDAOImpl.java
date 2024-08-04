@@ -21,7 +21,6 @@ public class PaymentNotificationDAOImpl implements PaymentNotificationDAO {
         return PaymentNotificationDTO.builder()
                 .id(paymentNotificationEntity.getId())
                 .email(paymentNotificationEntity.getEmail())
-                .userId(paymentNotificationEntity.getUserId())
                 .notificationContent(paymentNotificationEntity.getNotificationContent())
                 .notificationTime(paymentNotificationEntity.getNotificationTime())
                 .build();
@@ -31,7 +30,6 @@ public class PaymentNotificationDAOImpl implements PaymentNotificationDAO {
     private PaymentNotificationEntity paymentNotificationDTOToEntity(PaymentNotificationDTO paymentNotificationDTO) {
         return PaymentNotificationEntity.builder()
                 .id(paymentNotificationDTO.getId())
-                .userId(paymentNotificationDTO.getUserId())
                 .email(paymentNotificationDTO.getEmail())
                 .notificationContent(paymentNotificationDTO.getNotificationContent())
                 .notificationTime(paymentNotificationDTO.getNotificationTime())
@@ -70,7 +68,6 @@ public class PaymentNotificationDAOImpl implements PaymentNotificationDAO {
         Optional<PaymentNotificationEntity> entityOpt = paymentNotificationRepository.findById(paymentNotificationDTO.getId());
         if (entityOpt.isPresent()) {
             PaymentNotificationEntity paymentNotificationEntity = entityOpt.get();
-            paymentNotificationEntity.setUserId(paymentNotificationDTO.getUserId());
             paymentNotificationEntity.setEmail(paymentNotificationDTO.getEmail());
             paymentNotificationEntity.setNotificationContent(paymentNotificationDTO.getNotificationContent());
             paymentNotificationEntity.setNotificationTime(paymentNotificationDTO.getNotificationTime());

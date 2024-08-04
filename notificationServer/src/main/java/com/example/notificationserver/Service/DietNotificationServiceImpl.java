@@ -30,11 +30,6 @@ public class DietNotificationServiceImpl implements DietNotificationService {
     }
 
     @Override
-    public List<DietNotificationDTO> getDietNotificationsByUserId(Long userId) {
-        return dietNotificationDAO.findByUserId(userId);
-    }
-
-    @Override
     public DietNotificationDTO updateDietNotification(DietNotificationDTO dietNotificationDTO) {
         return dietNotificationDAO.update(dietNotificationDTO);
     }
