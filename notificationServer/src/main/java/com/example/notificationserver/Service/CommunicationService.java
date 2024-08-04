@@ -10,4 +10,5 @@ public interface CommunicationService {
     ExternalPaymentNotificationDTO getUserEmails();
     void saveToExternalPaymentInfoEntity(ExternalPaymentNotificationDTO dto);
     void getUserDietEmails(String date);
+    void fetchAndSaveDailyReviews();
 }

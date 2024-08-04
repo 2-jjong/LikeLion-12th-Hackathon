@@ -3,31 +3,30 @@ package com.example.notificationserver.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "survey_notification")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @ToString
 public class SurveyNotificationEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+
     private String email;
-    @Column
     private String notificationContent;
-    @Column
     private LocalDateTime notificationTime;
+    private Long dailyReviewId;
+    private LocalDate reviewDate;
 
-    @Builder
-    public SurveyNotificationEntity(String email, String notificationContent, LocalDateTime notificationTime) {
-        this.email = email;
-        this.notificationContent = notificationContent;
-        this.notificationTime = notificationTime;
-    }
-
-
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "survey_notification_id")
+    private List<ReviewEntity> reviews;
 }

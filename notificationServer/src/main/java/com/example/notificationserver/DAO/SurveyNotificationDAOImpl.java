@@ -1,13 +1,17 @@
 package com.example.notificationserver.DAO;
 
+import com.example.notificationserver.DTO.ReviewDTO;
 import com.example.notificationserver.DTO.SurveyNotificationDTO;
+import com.example.notificationserver.Entity.ReviewEntity;
 import com.example.notificationserver.Entity.SurveyNotificationEntity;
 import com.example.notificationserver.Repository.SurveyNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.stream.Collectors;
+
 @Repository
-public class SurveyNotificationDAOImpl implements SurveyNotificationDAO{
+public class SurveyNotificationDAOImpl implements SurveyNotificationDAO {
     private final SurveyNotificationRepository surveyNotificationRepository;
 
     @Autowired
@@ -15,21 +19,51 @@ public class SurveyNotificationDAOImpl implements SurveyNotificationDAO{
         this.surveyNotificationRepository = surveyNotificationRepository;
     }
 
-    //Entity to DTO
+    // Entity to DTO
     private SurveyNotificationDTO surveyNotificationEntityToDTO(SurveyNotificationEntity surveyNotificationEntity) {
         return SurveyNotificationDTO.builder()
                 .email(surveyNotificationEntity.getEmail())
                 .notificationContent(surveyNotificationEntity.getNotificationContent())
                 .notificationTime(surveyNotificationEntity.getNotificationTime())
+                .dailyReviewId(surveyNotificationEntity.getDailyReviewId())
+                .reviewDate(surveyNotificationEntity.getReviewDate())
+                .reviews(surveyNotificationEntity.getReviews().stream().map(this::reviewEntityToDTO).collect(Collectors.toList()))
                 .build();
     }
 
-    //DTO to Entity
+    // DTO to Entity
     private SurveyNotificationEntity DTOtoSurveyNotificationEntity(SurveyNotificationDTO surveyNotificationDTO) {
         return SurveyNotificationEntity.builder()
                 .email(surveyNotificationDTO.getEmail())
                 .notificationContent(surveyNotificationDTO.getNotificationContent())
                 .notificationTime(surveyNotificationDTO.getNotificationTime())
+                .dailyReviewId(surveyNotificationDTO.getDailyReviewId())
+                .reviewDate(surveyNotificationDTO.getReviewDate())
+                .reviews(surveyNotificationDTO.getReviews().stream().map(this::reviewDTOToEntity).collect(Collectors.toList()))
+                .build();
+    }
+
+    // Review Entity to DTO
+    private ReviewDTO reviewEntityToDTO(ReviewEntity reviewEntity) {
+        return ReviewDTO.builder()
+                .reviewId(reviewEntity.getReviewId())
+                .foodImage(reviewEntity.getFoodImage())
+                .foodName(reviewEntity.getFoodName())
+                .likes(reviewEntity.getLikes())
+                .disLikes(reviewEntity.getDisLikes())
+                .comments(reviewEntity.getComments())
+                .build();
+    }
+
+    // Review DTO to Entity
+    private ReviewEntity reviewDTOToEntity(ReviewDTO reviewDTO) {
+        return ReviewEntity.builder()
+                .reviewId(reviewDTO.getReviewId())
+                .foodImage(reviewDTO.getFoodImage())
+                .foodName(reviewDTO.getFoodName())
+                .likes(reviewDTO.getLikes())
+                .disLikes(reviewDTO.getDisLikes())
+                .comments(reviewDTO.getComments())
                 .build();
     }
 
@@ -50,5 +84,4 @@ public class SurveyNotificationDAOImpl implements SurveyNotificationDAO{
         SurveyNotificationEntity notificationEntity = DTOtoSurveyNotificationEntity(surveyNotificationDTO);
         surveyNotificationRepository.delete(notificationEntity);
     }
-
 }

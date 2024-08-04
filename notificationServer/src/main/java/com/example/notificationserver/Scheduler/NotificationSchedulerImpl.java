@@ -1,6 +1,5 @@
 package com.example.notificationserver.Scheduler;
 
-import com.example.notificationserver.DAO.PaymentNotificationDAO;
 import com.example.notificationserver.DTO.*;
 import com.example.notificationserver.Entity.ExternalDietInfoEntity;
 import com.example.notificationserver.Entity.ExternalPaymentInfoEntity;
@@ -23,17 +22,15 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
     private final NotificationService notificationService;
     private final PaymentNotificationService paymentNotificationService;
 
-    private final SurveyNotificationService surveyNotificationService;
     private final ExternalPaymentInfoRepository externalPaymentInfoRepository;
     private final CommunicationService communicationService;
     private final ExternalDietInfoRepository externalDietInfoRepository;
 
     @Autowired
-    public NotificationSchedulerImpl(DietNotificationService dietNotificationService, NotificationService notificationService, PaymentNotificationService paymentNotificationService, PaymentNotificationDAO paymentNotificationDAO, SurveyNotificationService surveyNotificationService, ExternalPaymentInfoRepository externalPaymentInfoRepository, CommunicationService communicationService, ExternalDietInfoRepository externalDietInfoRepository) {
+    public NotificationSchedulerImpl(DietNotificationService dietNotificationService, NotificationService notificationService, PaymentNotificationService paymentNotificationService, ExternalPaymentInfoRepository externalPaymentInfoRepository, CommunicationService communicationService, ExternalDietInfoRepository externalDietInfoRepository) {
         this.dietNotificationService = dietNotificationService;
         this.notificationService = notificationService;
         this.paymentNotificationService = paymentNotificationService;
-        this.surveyNotificationService = surveyNotificationService;
         this.externalPaymentInfoRepository = externalPaymentInfoRepository;
         this.communicationService = communicationService;
         this.externalDietInfoRepository = externalDietInfoRepository;
@@ -113,6 +110,7 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
 
     @Override
     @Scheduled(cron = "0 0 19 ? * SAT") // 결제일 알림
+    //@Scheduled(cron = "0/15 * * * * ?")
     public void scheduledPaymentNotificationTasks() {
         ExternalPaymentNotificationDTO userEmailsDTO = communicationService.getUserEmails();
         if (userEmailsDTO != null) {
@@ -145,28 +143,5 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
             paymentInfo.setProcessed(true);
             externalPaymentInfoRepository.save(paymentInfo);
         }
-    }
-
-    //설문조사 알림
-    @Override
-    @Scheduled(cron = "0 0 1 * * *")
-    public void scheduledSurveyNotifications() {
-        LocalDateTime currentDate = LocalDateTime.now();
-        // 포맷 정의: MM-dd
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일");
-        String formattedCurrentDate = currentDate.format(formatter);
-
-        // 내용을 결합
-        String combinedContent = formattedCurrentDate + " 설문조사에 참여해주세요~";
-
-        // SurveyNotificationDTO 생성 및 설정
-        SurveyNotificationDTO notification = new SurveyNotificationDTO();
-        notification.setEmail("응애");
-        notification.setNotificationContent(combinedContent);
-        notification.setNotificationTime(currentDate);
-
-        // SurveyNotification 생성 및 전송
-        surveyNotificationService.createSurveyNotification(notification);
-        notificationService.sendSurveyNotification(notification);
     }
 }
