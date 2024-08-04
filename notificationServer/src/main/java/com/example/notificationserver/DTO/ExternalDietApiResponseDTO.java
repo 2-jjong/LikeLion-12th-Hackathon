@@ -1,17 +1,22 @@
 package com.example.notificationserver.DTO;
+
 import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class ExternalDietApiResponseDTO {
     private String email;
-    private String diet;
-    private String content;
+    private String breakfast;
+    private String lunch;
+    private String dinner;
 
     @Builder
-    private ExternalDietApiResponseDTO(String email, String content) {
+    public ExternalDietApiResponseDTO(String email, String breakfast, String lunch, String dinner) {
         this.email = email;
-        this.content = content;
+        this.breakfast = breakfast;
+        this.lunch = lunch;
+        this.dinner = dinner;
     }
 }

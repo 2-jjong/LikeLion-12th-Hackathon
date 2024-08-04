@@ -7,14 +7,12 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@ToString
 public class ExternalDietNotificationDTO {
-    private String email;
-    private String diet;
-
+    private List<DailyDietDTO> dailyDiets;
 
     @Builder
-    public ExternalDietNotificationDTO(String email, String diet){
-        this.email = email;
-        this.diet = diet;
+    public ExternalDietNotificationDTO(List<DailyDietDTO> dailyDiets) {
+        this.dailyDiets = dailyDiets;
     }
 }

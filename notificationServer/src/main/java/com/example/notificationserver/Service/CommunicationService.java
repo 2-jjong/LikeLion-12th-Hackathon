@@ -8,6 +8,6 @@ import java.net.URISyntaxException;
 public interface CommunicationService {
     public String fetchAndSavePaymentInfo(String email) throws URISyntaxException;
     ExternalPaymentNotificationDTO getUserEmails();
-    ExternalDietNotificationDTO getUserDiet();
     void saveToExternalPaymentInfoEntity(ExternalPaymentNotificationDTO dto);
+    void getUserDietEmails(String date);
 }

@@ -12,10 +12,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class ExternalPaymentApiResponseDTO {
-    private List<String> emails;
+    private List<String> email;
 
     @Builder
-    public ExternalPaymentApiResponseDTO(List<String> emails){
-        this.emails = emails;
+    public ExternalPaymentApiResponseDTO(List<String> email){
+        this.email = email;
     }
 }

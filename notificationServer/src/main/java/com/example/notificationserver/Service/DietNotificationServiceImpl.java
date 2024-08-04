@@ -14,7 +14,7 @@ public class DietNotificationServiceImpl implements DietNotificationService {
     private final DietNotificationDAO dietNotificationDAO;
     private final DietNotificationRepository dietNotificationRepository;
 
-    public DietNotificationServiceImpl(DietNotificationDAO dietNotificationDAO, NotificationServiceImpl notificationServiceImpl, NotificationTypeService notificationTypeService, DietNotificationRepository dietNotificationRepository) {
+    public DietNotificationServiceImpl(DietNotificationDAO dietNotificationDAO, NotificationServiceImpl notificationServiceImpl, DietNotificationRepository dietNotificationRepository) {
         this.dietNotificationDAO = dietNotificationDAO;
         this.dietNotificationRepository = dietNotificationRepository;
     }

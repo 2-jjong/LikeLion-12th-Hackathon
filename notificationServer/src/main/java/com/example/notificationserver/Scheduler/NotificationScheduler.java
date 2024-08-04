@@ -13,7 +13,11 @@ import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 public interface NotificationScheduler {
-    void scheduleDietNotification();
+    void scheduleBreakfastNotification();
+    void scheduleLunchNotification();
+    void scheduleDinnerNotification();
+    void scheduledDietNotificationTasks();
+    void sendDietNotification(String mealTime);
     void scheduledPaymentNotificationTasks();
     void schedulePaymentNotification();
     void scheduledSurveyNotifications();

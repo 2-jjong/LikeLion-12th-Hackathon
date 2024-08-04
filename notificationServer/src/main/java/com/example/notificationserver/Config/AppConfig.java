@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 public class AppConfig {
     @Bean
-    @LoadBalanced
+    //@LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
     }
