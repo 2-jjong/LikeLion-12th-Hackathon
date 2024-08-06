@@ -10,6 +10,6 @@ import java.util.List;
 public interface DailyDietService {
     List<DailyDietDTO> getByUserEmailAndDate(String userEmail, LocalDate date);
     List<DailyDietDTO> getByDate(LocalDate date);
-    List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS);
+    List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS, String userEmail);
     List<DailyDietDTO> convertToDailyDietDTOS(List<DailyDietEntity> dailyDietEntities);
 }

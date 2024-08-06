@@ -34,27 +34,30 @@ public class DailyDietServiceImpl implements DailyDietService {
         return dailyDietDAO.getByDate(date).stream().map(this::convertToDailyDietDTO).collect(Collectors.toList());
     }
 
-    private DailyDietEntity convertToDailyDietEntity(DailyDietRequestDTO dailyDietDTO) {
+    private DailyDietEntity convertToDailyDietEntity(DailyDietRequestDTO dailyDietDTO, String userEmail) {
         return DailyDietEntity.builder()
-                .userEmail(dailyDietDTO.getUserEmail())
-                .mealSelections(mealSelectionService.convertToMealSelectionEntities(dailyDietDTO.getMealSelections()))
-                .date(dailyDietDTO.getDate())
+                .userEmail(userEmail)
+                .mealOptions(mealSelectionService.convertToMealSelectionEntities(dailyDietDTO.getMealOptions()))
+                .day(dailyDietDTO.getDay())
                 .build();
     }
 
     private DailyDietDTO convertToDailyDietDTO(DailyDietEntity dailyDietEntity) {
         return DailyDietDTO.builder()
                 .dailyDietId(dailyDietEntity.getDailyDietId())
-                .date(dailyDietEntity.getDate())
+                .day(dailyDietEntity.getDay())
                 .userEmail(dailyDietEntity.getUserEmail())
-                .mealSelections(mealSelectionService.convertToMealSelectionDTOS(dailyDietEntity.getMealSelections()))
+                .mealOptions(mealSelectionService.convertToMealSelectionDTOS(dailyDietEntity.getMealOptions()))
                 .build();
     }
 
     @Override
-    public List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS) {
-        return dailyDietDTOS.stream().map(this::convertToDailyDietEntity).collect(Collectors.toList());
+    public List<DailyDietEntity> convertToDailyDietEntities(List<DailyDietRequestDTO> dailyDietDTOS, String userEmail) {
+        return dailyDietDTOS.stream()
+                .map(dailyDietDTO -> convertToDailyDietEntity(dailyDietDTO, userEmail))
+                .collect(Collectors.toList());
     }
+
 
     @Override
     public List<DailyDietDTO> convertToDailyDietDTOS(List<DailyDietEntity> dailyDietEntities){

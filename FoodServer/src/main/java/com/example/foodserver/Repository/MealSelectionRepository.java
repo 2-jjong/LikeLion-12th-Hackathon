@@ -8,5 +8,4 @@ import java.util.List;
 
 @Repository
 public interface MealSelectionRepository extends JpaRepository<MealSelectionEntity, Long> {
-    List<MealSelectionEntity> findByUserEmail(String userEmail);
 }

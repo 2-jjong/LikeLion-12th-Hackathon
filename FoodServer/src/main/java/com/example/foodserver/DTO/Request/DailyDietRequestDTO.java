@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class DailyDietRequestDTO {
     private Long dailyDietId;
-    private LocalDate date;
-    private List<MealSelectionRequestDTO> mealSelections;
-    private String userEmail;
+    private LocalDate day;
+    private List<MealSelectionRequestDTO> mealOptions;
 }

@@ -31,4 +31,9 @@ public class WeeklyDietDAOImpl implements WeeklyDietDAO {
     public Boolean existsByCurrentWeeklyMealPlan(LocalDate date, String userEmail){
         return weeklyDietRepository.existsByCurrentWeeklyMealPlan(date, userEmail);
     }
+
+    @Override
+    public WeeklyDietEntity getByWeeklyId(Long weeklyId){
+        return weeklyDietRepository.getReferenceById(weeklyId);
+    }
 }

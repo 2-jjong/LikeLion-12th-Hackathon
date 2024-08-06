@@ -6,4 +6,5 @@ import com.example.foodserver.DTO.Request.WeeklyDietRequestDTO;
 public interface WeeklyDietService {
     WeeklyDietDTO createWeeklyDiet(WeeklyDietRequestDTO weeklyDietDTO);
     WeeklyDietDTO getWeeklyDietByUserEmail(String userEmail);
+    public WeeklyDietDTO getWeeklyDietByWeeklyId(Long weeklyId);
 }

@@ -14,6 +14,6 @@ import java.util.List;
 public class DailyDietDTO {
     private Long dailyDietId;
     private String userEmail;
-    private LocalDate date;
-    private List<MealSelectionDTO> mealSelections;
+    private LocalDate day;
+    private List<MealSelectionDTO> mealOptions;
 }

@@ -26,4 +26,9 @@ public class WeeklyDietController {
     public WeeklyDietDTO getWeeklyByUserEmail(@PathVariable("userEmail") String userEmail) {
         return weeklyDietService.getWeeklyDietByUserEmail(userEmail);
     }
+
+    @GetMapping("/read/id/{weeklyId}")
+    public WeeklyDietDTO getWeeklyByWeeklyId(@PathVariable("weeklyId") Long weeklyId) {
+        return weeklyDietService.getWeeklyDietByWeeklyId(weeklyId);
+    }
 }

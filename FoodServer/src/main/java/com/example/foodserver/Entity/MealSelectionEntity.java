@@ -15,11 +15,9 @@ public class MealSelectionEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long mealSelectionId;
     @Column
-    private String userEmail;
-    @Column
     private Long foodMenuId;
     @Column
-    private String mealTime;
+    private String mealType;
     @Column
     private int count;
 }

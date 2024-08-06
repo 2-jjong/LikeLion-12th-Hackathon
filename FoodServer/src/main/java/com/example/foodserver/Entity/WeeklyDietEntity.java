@@ -27,5 +27,5 @@ public class WeeklyDietEntity {
     private LocalDate endDate;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
-    private List<DailyDietEntity> dailyDiets;
+    private List<DailyDietEntity> dailyMealPlans;
 }

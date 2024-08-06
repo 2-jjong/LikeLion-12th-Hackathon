@@ -18,10 +18,10 @@ public class DailyDietEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long dailyDietId;
     @Column
-    private LocalDate date;
+    private LocalDate day;
     @Column
     private String userEmail;
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
-    private List<MealSelectionEntity> mealSelections;
+    private List<MealSelectionEntity> mealOptions;
 }

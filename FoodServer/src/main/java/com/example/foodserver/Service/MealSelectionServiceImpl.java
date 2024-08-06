@@ -30,9 +30,8 @@ public class MealSelectionServiceImpl implements MealSelectionService {
 
     public MealSelectionEntity convertToMealSelectionEntity(MealSelectionRequestDTO mealSelectionDTO) {
         return MealSelectionEntity.builder()
-                .userEmail(mealSelectionDTO.getUserEmail())
-                .foodMenuId(mealSelectionDTO.getFoodMenuId())
-                .mealTime(mealSelectionDTO.getMealTime())
+                .foodMenuId(mealSelectionDTO.getFoodMenus().getId())
+                .mealType(mealSelectionDTO.getMealType())
                 .count(mealSelectionDTO.getCount())
                 .build();
     }
@@ -40,9 +39,8 @@ public class MealSelectionServiceImpl implements MealSelectionService {
     public MealSelectionDTO convertToMealSelectionDTO(MealSelectionEntity mealSelectionEntity) {
         return MealSelectionDTO.builder()
                 .mealSelectionId(mealSelectionEntity.getMealSelectionId())
-                .userEmail(mealSelectionEntity.getUserEmail())
                 .foodMenu(communicationService.getFoodMenu(mealSelectionEntity.getFoodMenuId()))
-                .mealTime(mealSelectionEntity.getMealTime())
+                .mealType(mealSelectionEntity.getMealType())
                 .count(mealSelectionEntity.getCount())
                 .build();
     }

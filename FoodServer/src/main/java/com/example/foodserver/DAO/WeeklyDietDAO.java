@@ -8,4 +8,5 @@ public interface WeeklyDietDAO {
     void create(WeeklyDietEntity weeklyDietEntity);
     WeeklyDietEntity getByUserEmail(String userEmail);
     public Boolean existsByCurrentWeeklyMealPlan(LocalDate date, String userEmail);
+    public WeeklyDietEntity getByWeeklyId(Long weeklyId);
 }

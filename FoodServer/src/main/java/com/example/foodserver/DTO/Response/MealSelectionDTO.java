@@ -10,8 +10,7 @@ import lombok.*;
 @Builder
 public class MealSelectionDTO {
     private Long mealSelectionId;
-    private String userEmail;
-    private String mealTime;
+    private String mealType;
     private FoodMenuDTO foodMenu;
     private int count;
 }
