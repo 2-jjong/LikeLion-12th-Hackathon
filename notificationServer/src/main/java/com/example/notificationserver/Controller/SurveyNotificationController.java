@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/notification/payment")
+@RequestMapping("/api/notification/payment")
 public class SurveyNotificationController {
     private final SurveyNotificationService surveyNotificationService;
 

@@ -18,11 +18,16 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,14 +40,18 @@ public class CommunicationServiceImpl implements CommunicationService {
     private final ExternalPaymentInfoRepository externalPaymentInfoRepository;
     private final ExternalDietInfoRepository externalDietInfoRepository;
     private final DailyReviewRepository dailyReviewRepository;
+    private final NotificationService notificationService;
+    private final SurveyNotificationService surveyNotificationService;
 
     @Autowired
-    public CommunicationServiceImpl(DiscoveryClient discoveryClient, RestTemplate restTemplate, ExternalPaymentInfoRepository externalPaymentInfoRepository, ExternalDietInfoRepository externalDietInfoRepository, DailyReviewRepository dailyReviewRepository) {
+    public CommunicationServiceImpl(DiscoveryClient discoveryClient, RestTemplate restTemplate, ExternalPaymentInfoRepository externalPaymentInfoRepository, ExternalDietInfoRepository externalDietInfoRepository, DailyReviewRepository dailyReviewRepository, NotificationService notificationService, SurveyNotificationService surveyNotificationService) {
         this.discoveryClient = discoveryClient;
         this.restTemplate = restTemplate;
         this.externalPaymentInfoRepository = externalPaymentInfoRepository;
         this.externalDietInfoRepository = externalDietInfoRepository;
         this.dailyReviewRepository = dailyReviewRepository;
+        this.notificationService = notificationService;
+        this.surveyNotificationService = surveyNotificationService;
     }
 
     @Override
@@ -153,6 +162,8 @@ public class CommunicationServiceImpl implements CommunicationService {
     @Transactional
     public void fetchAndSaveDailyReviews() {
         LocalDate date = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM월 dd일");
+        String formattedDate = date.format(formatter);
         List<ServiceInstance> instances = discoveryClient.getInstances("MEAL-SERVER");
         if (instances == null || instances.isEmpty()) {
             throw new IllegalStateException("No MEAL-SERVER instances available");
@@ -163,6 +174,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<Void> request = new HttpEntity<>(headers);
         ResponseEntity<DailyReviewDTO[]> response;
+        System.out.println("Request URI: " + uri);
 
         try {
             response = restTemplate.exchange(uri, HttpMethod.GET, request, DailyReviewDTO[].class);
@@ -175,6 +187,26 @@ public class CommunicationServiceImpl implements CommunicationService {
             if (dailyReviewDTOs != null) {
                 Map<String, List<DailyReviewDTO>> groupedReviews = groupReviewsByUserEmail(dailyReviewDTOs);
                 saveGroupedReviews(groupedReviews);
+
+                // 각 이메일별로 데이터를 전송하고 DailyReviewEntity를 삭제합니다.
+                for (String userEmail : groupedReviews.keySet()) {
+                    List<DailyReviewDTO> userReviews = groupedReviews.get(userEmail);
+                    for (DailyReviewDTO reviewDTO : userReviews) {
+                        SurveyNotificationDTO notification = SurveyNotificationDTO.builder()
+                                .email(userEmail)
+                                .notificationContent(formattedDate + " 식단 만족도 조사에 참여해주세요~")
+                                .reviewDate(reviewDTO.getReviewDate())  // reviewDate 설정
+                                .dailyReviewId(reviewDTO.getDailyReviewId())  // dailyReviewId 설정
+                                .notificationTime(LocalDateTime.now())  // notificationTime 설정
+                                .reviews(reviewDTO.getReviews())  // reviews 설정
+                                .build();
+                        surveyNotificationService.createSurveyNotification(notification);
+                        notificationService.sendSurveyNotification(notification);
+                    }
+                    deleteDailyReviewByEmail(userEmail);
+                }
+            } else {
+                throw new IllegalStateException("No reviews found for the given date");
             }
         } else {
             throw new IllegalStateException("Failed to fetch reviews from MEAL-SERVER");
@@ -203,7 +235,7 @@ public class CommunicationServiceImpl implements CommunicationService {
         }
     }
 
-    private ReviewEntity convertToReviewEntity(DailyReviewDTO.ReviewDTO reviewDTO) {
+    private ReviewEntity convertToReviewEntity(ReviewDTO reviewDTO) {
         return ReviewEntity.builder()
                 .foodImage(reviewDTO.getFoodImage())
                 .foodName(reviewDTO.getFoodName())
@@ -211,5 +243,9 @@ public class CommunicationServiceImpl implements CommunicationService {
                 .disLikes(reviewDTO.getDisLikes())
                 .comments(reviewDTO.getComments())
                 .build();
+    }
+    @Transactional
+    public void deleteDailyReviewByEmail(String userEmail) {
+        dailyReviewRepository.deleteByUserEmail(userEmail);
     }
 }

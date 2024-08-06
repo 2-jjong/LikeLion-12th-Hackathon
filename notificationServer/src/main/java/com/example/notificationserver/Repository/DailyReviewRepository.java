@@ -7,5 +7,5 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 public interface DailyReviewRepository extends JpaRepository<DailyReviewEntity, Long> {
-    Optional<DailyReviewEntity> findByUserEmailAndReviewDate(String userEmail, LocalDate reviewDate);
+    void deleteByUserEmail(String userEmail);
 }

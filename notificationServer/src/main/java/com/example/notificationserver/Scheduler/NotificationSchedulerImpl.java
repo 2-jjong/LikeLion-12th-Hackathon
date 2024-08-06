@@ -9,6 +9,9 @@ import com.example.notificationserver.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,6 +19,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Component
+@RestController
+@RequestMapping("/api/notification/lol")
 public class NotificationSchedulerImpl implements NotificationScheduler{
 
     private final DietNotificationService dietNotificationService;
@@ -41,10 +46,12 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
     //"0/20 * * * * ?" 20초마다 실행
     //토요일
     @Override
+    @GetMapping("/run-diet-task")
     @Scheduled(cron = "0 0 7 * * ?") // 아침 알림: 매일 7시에 실행
     public void scheduleBreakfastNotification() {
         LocalDate today = LocalDate.now();
         communicationService.getUserDietEmails(today.toString());
+        System.out.println("투데이" + today);
         sendDietNotification("아침");
     }
 
@@ -109,8 +116,9 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
     }
 
     @Override
+    @GetMapping("/run-payment-task")
     @Scheduled(cron = "0 0 19 ? * SAT") // 결제일 알림
-    //@Scheduled(cron = "0/15 * * * * ?")
+    //@Scheduled(cron = "0/30 * * * * ?")
     public void scheduledPaymentNotificationTasks() {
         ExternalPaymentNotificationDTO userEmailsDTO = communicationService.getUserEmails();
         if (userEmailsDTO != null) {
@@ -143,5 +151,13 @@ public class NotificationSchedulerImpl implements NotificationScheduler{
             paymentInfo.setProcessed(true);
             externalPaymentInfoRepository.save(paymentInfo);
         }
+    }
+
+    //설문 조사
+    @Override
+    @GetMapping("/run-survey-task")
+    @Scheduled(cron = "0 0 19 * * ?") // 매일 19시에 실행
+    public void scheduledSurveyNotification() {
+        communicationService.fetchAndSaveDailyReviews();
     }
 }

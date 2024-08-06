@@ -19,4 +19,5 @@ public interface NotificationScheduler {
     void sendDietNotification(String mealTime);
     void scheduledPaymentNotificationTasks();
     void schedulePaymentNotification();
+    void scheduledSurveyNotification();
 }

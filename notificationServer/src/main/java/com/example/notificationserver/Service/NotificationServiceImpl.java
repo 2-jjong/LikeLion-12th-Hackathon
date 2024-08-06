@@ -1,5 +1,6 @@
 package com.example.notificationserver.Service;
 
+import com.example.notificationserver.DTO.DailyReviewDTO;
 import com.example.notificationserver.DTO.DietNotificationDTO;
 import com.example.notificationserver.DTO.PaymentNotificationDTO;
 import com.example.notificationserver.DTO.SurveyNotificationDTO;
@@ -24,7 +25,7 @@ public class NotificationServiceImpl implements NotificationService {
         messagingTemplate.convertAndSend("/topic/notification/payment/" + notification.getEmail(), notification);
     }
     @Override
-    public void sendSurveyNotification(SurveyNotificationDTO notification) { // 여기다가 SurveyJsonDTO 하나 더 해서 보내야할 거 같음.
+    public void sendSurveyNotification(SurveyNotificationDTO notification) {
         messagingTemplate.convertAndSend("/topic/notification/survey/" + notification.getEmail(), notification);
     }
 }

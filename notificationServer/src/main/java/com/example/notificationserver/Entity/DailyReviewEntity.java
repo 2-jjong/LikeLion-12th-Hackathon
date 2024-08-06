@@ -16,7 +16,9 @@ public class DailyReviewEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column
     private String userEmail;
+    @Column
     private LocalDate reviewDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

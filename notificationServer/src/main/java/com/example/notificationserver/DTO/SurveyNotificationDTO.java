@@ -1,22 +1,27 @@
 package com.example.notificationserver.DTO;
 
-import lombok.*;
-
+import lombok.Builder;
+import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+import lombok.Builder;
+import lombok.Data;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Data
 @Builder
 public class SurveyNotificationDTO {
     private String email;
     private String notificationContent;
-    private LocalDateTime notificationTime;
+    private LocalDate reviewDate;
     private Long dailyReviewId;
-    private LocalDate reviewDate; // 변경된 부분
+    private LocalDateTime notificationTime;
     private List<ReviewDTO> reviews;
+    // 롬복을 사용하므로 getter, setter, builder 등이 자동으로 생성됩니다
 }
+
+

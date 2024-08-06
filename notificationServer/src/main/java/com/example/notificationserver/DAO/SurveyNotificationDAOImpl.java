@@ -8,6 +8,7 @@ import com.example.notificationserver.Repository.SurveyNotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 @Repository
@@ -27,9 +28,12 @@ public class SurveyNotificationDAOImpl implements SurveyNotificationDAO {
                 .notificationTime(surveyNotificationEntity.getNotificationTime())
                 .dailyReviewId(surveyNotificationEntity.getDailyReviewId())
                 .reviewDate(surveyNotificationEntity.getReviewDate())
-                .reviews(surveyNotificationEntity.getReviews().stream().map(this::reviewEntityToDTO).collect(Collectors.toList()))
+                .reviews(surveyNotificationEntity.getReviews() != null ?
+                        surveyNotificationEntity.getReviews().stream().map(this::reviewEntityToDTO).collect(Collectors.toList()) :
+                        new ArrayList<>())
                 .build();
     }
+
 
     // DTO to Entity
     private SurveyNotificationEntity DTOtoSurveyNotificationEntity(SurveyNotificationDTO surveyNotificationDTO) {
@@ -39,9 +43,10 @@ public class SurveyNotificationDAOImpl implements SurveyNotificationDAO {
                 .notificationTime(surveyNotificationDTO.getNotificationTime())
                 .dailyReviewId(surveyNotificationDTO.getDailyReviewId())
                 .reviewDate(surveyNotificationDTO.getReviewDate())
-                .reviews(surveyNotificationDTO.getReviews().stream().map(this::reviewDTOToEntity).collect(Collectors.toList()))
+                .reviews(surveyNotificationDTO.getReviews() != null ? surveyNotificationDTO.getReviews().stream().map(this::reviewDTOToEntity).collect(Collectors.toList()) : null)
                 .build();
     }
+
 
     // Review Entity to DTO
     private ReviewDTO reviewEntityToDTO(ReviewEntity reviewEntity) {
