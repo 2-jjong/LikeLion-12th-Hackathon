@@ -21,7 +21,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")
-                .setAllowedOrigins("http://nimn.store") // Frontend URL
+                .setAllowedOrigins("http://nimn.store") // Frontend URL, "http://127.0.0.1"
                 .withSockJS();
     }
 }
